@@ -1,0 +1,78 @@
+.auth-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: #ffffff;
+}
+
+h1 {
+    font-size: 4em;
+    margin-bottom: 0.5em;
+    text-align: center;
+    background: var(--gradient-loud-100, linear-gradient(0deg, #d8ecf8 0, #98c0ef 100%));
+    background-clip: text;
+    text-shadow: 0 2px 16px rgba(174, 207, 242, .24);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.form-container {
+    background: rgba(255, 255, 255, 0.15);
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.form-group {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+input {
+    padding: 12px 15px;
+    border: none;
+    border-radius: 8px;
+    width: 300px;
+    font-size: 1em;
+    background: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+button {
+    padding: 13px 68px;
+    border: 0;
+    color: #ffffff;
+    background: linear-gradient(to left, #48C4D8 14.81%, #007DD6 70.37%, #3F5FFF 100%);
+    transition: 0.5s;
+    background-size: 150% auto;
+    text-transform: uppercase;
+    font-weight: 700;
+    border-radius: 27px;
+    font-size: 18px;
+}
+
+button:hover {
+    background: linear-gradient(to left, #6ad0e5 14.81%, #00a0e9 70.37%, #5a7fff 100%);
+    color: #ffffff;
+    cursor: pointer;
+}
+
+.back-button {
+    color: white;
+    text-decoration: none;
+}
+
+.back-button:hover {
+    text-decoration: underline;
+}
