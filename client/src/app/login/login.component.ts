@@ -13,6 +13,6 @@ export class LoginComponent {
   private router = inject(Router);
 
   login() {
-    this.router.navigateByUrl('user');
+    this.router.navigateByUrl('user/1');
   }
 }

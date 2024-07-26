@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { USERS } from '../_models/data';
 
 @Component({
   selector: 'app-user',
@@ -8,9 +10,7 @@ import { Component } from '@angular/core';
   styleUrl: './user.component.css'
 })
 export class UserComponent {
-  user = {
-    name: 'John Doe',
-    email: 'john.doe@example.com',
-    profilePicture: 'https://xsgames.co/randomusers/assets/avatars/male/20.jpg'
-  };
+  private route = inject(ActivatedRoute);
+  id = this.route.snapshot.paramMap.get('id');
+  user = USERS.find(user => user.Id == 1);
 }

@@ -13,6 +13,6 @@ export class RegisterComponent {
   private router = inject(Router);
 
   register() {
-    this.router.navigateByUrl('user');
+    this.router.navigateByUrl('user/1');
   }
 }

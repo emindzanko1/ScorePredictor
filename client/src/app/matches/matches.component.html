@@ -1,0 +1,27 @@
+@for (round of schedule; track $index) {
+<div>
+    <h3>{{ round.round }}</h3>
+    <table class="schedule">
+        <tr>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Home</th>
+            <th></th>
+            <th>Away</th>
+            <th>Result</th>
+        </tr>
+        @for (match of round.matches; track $index) {
+        <tr>
+            <td>{{ match.date }}</td>
+            <td>{{ match.time }}</td>
+            <td>{{ match.home }}</td>
+            <td>-</td>
+            <td>{{ match.away }}</td>
+            <td>{{ match.result }}</td>
+        </tr>
+        }
+
+    </table>
+    <br>
+</div>
+}
