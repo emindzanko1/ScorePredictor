@@ -21,7 +21,7 @@ export class NavComponent {
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event: NavigationEnd) => {
-      this.showNavbar = event.url === '/user/1' || event.url === '/matches';
+      this.showNavbar = /^\/user\/(10|[1-9])$/.test(event.url) || event.url === '/matches';
     });
   }
 }

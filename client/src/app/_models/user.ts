@@ -8,4 +8,5 @@ export interface User {
     CreatedAt: Date;
     UpdatedAt: Date;
     Picture?: string; 
+    FullName: string;
 }

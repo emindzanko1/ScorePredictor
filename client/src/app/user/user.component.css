@@ -1,49 +1,85 @@
 .profile-wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-    /* background: rgba(255, 255, 255, 0.1); */
-    min-height: 100vh;
-  }
-  
-  .profile-header {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  
-  .profile-picture {
-    border-radius: 50%;
-    width: 150px;
-    height: 150px;
-    object-fit: cover;
-    border: 5px solid #00aaff; 
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); 
-  }
-  
-  h1 {
-    font-size: 2.5em;
-    color: #ffffff; 
-    margin: 10px 0;
-  }
-  
-  p {
-    font-size: 1.2em;
-    color: #e0e0e0; 
-  }
-  
-  .profile-content {
-    max-width: 800px;
-    width: 100%;
-    background: rgba(255, 255, 255, 0.2); 
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  }
-  
-  h2 {
-    font-size: 2em;
-    color: #ffffff; 
-    margin-bottom: 10px;
-  }
-  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  /* background: rgba(255, 255, 255, 0.1); */
+  min-height: 100vh;
+}
+
+.profile-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.profile-picture {
+  border-radius: 50%;
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border: 5px solid #00aaff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+h1 {
+  font-size: 3em;
+  color: #ffffff;
+  margin: 10px 0;
+}
+
+p {
+  font-size: 1.2em;
+  color: #e0e0e0;
+}
+
+.profile-content {
+  max-width: 800px;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+h2 {
+  font-size: 2.5em;
+  color: #ffffff;
+  margin: 10px 0;
+  text-align: center;
+}
+
+.leaderboard-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  /* border: 2px solid #ddd;  */
+}
+
+.leaderboard-table th,
+.leaderboard-table td {
+  padding: 8px;
+  text-align: center;
+  color: #ffffff;
+  font-size: 1.5em; 
+}
+
+.leaderboard-table:hover {
+  cursor: pointer;
+}
+
+/* .leaderboard-table th {
+  background-color: #4CAF50;
+  color: white;
+} */
+
+/* .leaderboard-table tr:nth-child(even) {
+  background-color: #333333;
+} */
+
+.leaderboard-table td:hover {
+  text-decoration: white underline;
+}
+
+.highlight {
+  background: linear-gradient(to left, #48C4D8 14.81%, #007DD6 70.37%, #3F5FFF 100%);
+}
