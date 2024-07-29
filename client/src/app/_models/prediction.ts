@@ -2,6 +2,6 @@ export interface Prediction {
     id: number;
     userId: number;
     outcomes: string[];
-    result: string;
+    results: string[]; 
     scorer: string;
 }

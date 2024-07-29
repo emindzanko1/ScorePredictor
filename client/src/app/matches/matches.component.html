@@ -1,4 +1,4 @@
-<form (ngSubmit)="submitPredictions()" #predictionForm="ngForm">
+<form (ngSubmit)="submitPrediction()" #predictionForm="ngForm">
     @for (round of schedule; track $index) {
     <div class="container">
         <h3>{{ round.round }}</h3>
@@ -29,14 +29,8 @@
                     </select>
                 </td>
                 <td>
-                    <input [(ngModel)]="prediction.result" 
-                    name="result-{{ match.home }}-{{ match.away }}"
-                    placeholder="Result" 
-                    (focus)="selectResultNew($index)" 
-                    (blur)="clearResult()" 
-                    (input)="updateResult($event, $index)"
-                    [attr.disabled]="selectedResultIndex !== $index ? true : null"
-                    required />
+                    <input [(ngModel)]="prediction.results[$index]" name="result-{{ match.home }}-{{ match.away }}"
+                        placeholder="Result" required />
                 </td>
                 <td>
                     <select class="player-select" [(ngModel)]="prediction.scorer"
