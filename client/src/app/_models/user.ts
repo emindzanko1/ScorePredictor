@@ -1,12 +1,12 @@
 export interface User {
-    Id: number;
-    Username: string;
-    Email: string;
-    PasswordHash: string;
-    Points: number;
-    LastLogin?: Date;
-    CreatedAt: Date;
-    UpdatedAt: Date;
-    Picture?: string; 
-    FullName: string;
+    id: number;
+    username: string;
+    email: string;
+    passwordHash: string;
+    points: number;
+    lastLogin?: Date;
+    createdAt: Date;
+    updatedAt: Date;
+    picture?: string; 
+    fullName: string;
 }
