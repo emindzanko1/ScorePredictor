@@ -21,7 +21,7 @@
                 <td>-</td>
                 <td>{{ match.away }}</td>
                 <td>
-                    <select [(ngModel)]="match.prediction.outcome" name="outcome-{{ match.home }}-{{ match.away }}"
+                    <select [(ngModel)]="prediction.outcomes[$index]" name="outcome-{{ match.home }}-{{ match.away }}"
                         required>
                         <option value="1">1</option>
                         <option value="X">X</option>
@@ -29,11 +29,17 @@
                     </select>
                 </td>
                 <td>
-                    <input [(ngModel)]="match.result" name="result-{{ match.home }}-{{ match.away }}"
-                        placeholder="Result" (focus)="clearInput($event)" (input)="selectResult(match)" required />
+                    <input [(ngModel)]="prediction.result" 
+                    name="result-{{ match.home }}-{{ match.away }}"
+                    placeholder="Result" 
+                    (focus)="selectResultNew($index)" 
+                    (blur)="clearResult()" 
+                    (input)="updateResult($event, $index)"
+                    [attr.disabled]="selectedResultIndex !== $index ? true : null"
+                    required />
                 </td>
                 <td>
-                    <select class="player-select" [(ngModel)]="match.prediction.scorer"
+                    <select class="player-select" [(ngModel)]="prediction.scorer"
                         name="scorer-{{ match.home }}-{{ match.away }}" (change)="selectScorer(match)" required>
                         @for (player of getPlayersByClubs(match.home, match.away); track $index) {
                         <option [value]="player.name">
@@ -46,7 +52,7 @@
             }
         </table>
         <br>
-        <button type="submit" class="submit-btn" [disabled]="!predictionForm.form.valid">Submit Predictions</button>
+        <button type="submit" class="submit-btn" [disabled]="!validatePredictions()">Submit Predictions</button>
     </div>
     }
 </form>

@@ -1,27 +1,43 @@
-import { Component, input } from '@angular/core';
-import { PLAYERS_DATA, SCHEDULE_DATA } from '../_models/data';
+import { Component } from '@angular/core';
+import { SCHEDULE_DATA } from '../data/schedules';
 import { FormsModule } from '@angular/forms';
 import { Player } from '../_models/player';
+import { PLAYERS_DATA } from '../data/players';
+import { TEAMS_DATA } from '../data/teams';
+import { Prediction } from '../_models/prediction';
 
 @Component({
   selector: 'app-matches',
   standalone: true,
   imports: [FormsModule],
   templateUrl: './matches.component.html',
-  styleUrl: './matches.component.css'
+  styleUrls: ['./matches.component.css']
 })
 export class MatchesComponent {
   schedule = SCHEDULE_DATA;
   players = PLAYERS_DATA;
+  teams = TEAMS_DATA;
   selectedResult: any = null;
   selectedScorer: any = null;
-
+  outcome = 0;
+  selectedResultIndex: number | null = null; 
+  prediction: Prediction = {
+    id: 0,
+    userId: 1, 
+    outcomes: Array(6).fill(''), 
+    result: '',
+    scorer: ''
+  };
 
   getPlayersByClubs(home: string, away: string): Player[] {
-    return this.players;
-    // const homeClubId = this.getClubIdByName(home);
-    // const awayClubId = this.getClubIdByName(away);
-    // return this.players.filter(player => player.clubId === homeClubId || player.clubId === awayClubId);
+    const homeClubId = this.getClubIdByName(home);
+    const awayClubId = this.getClubIdByName(away);
+    return this.players.filter(player => player.clubId === homeClubId || player.clubId === awayClubId);
+  }
+
+  getClubIdByName(name: string) {
+    const club = this.teams.find(team => team.name === name);
+    return club? club.id : null;	
   }
 
   submitPrediction(match: any): void {
@@ -37,7 +53,7 @@ export class MatchesComponent {
 
   submitPredictions(): void {
     if (this.validatePredictions()) {
-      console.log('Predictions submitted:', this.schedule);
+      console.log('Predictions submitted:', this.prediction);
     } else {
       alert('Please fill in all required fields correctly.');
     }
@@ -58,24 +74,30 @@ export class MatchesComponent {
   }
 
   validatePredictions(): boolean {
-    let allOutcomesSelected = true;
-    let oneResultSelected = false;
-    let oneScorerSelected = false;
+    const hasSixOutcomes = this.prediction.outcomes.length === 6 && this.prediction.outcomes.every(outcome => ['1', 'X', '2'].includes(outcome));
+    const hasOneResult = this.prediction.result.trim() !== '' && /^\d+\s*:\s*\d+$/.test(this.prediction.result.trim());
+    const hasOneScorer = this.prediction.scorer.trim() !== '';
+    // console.log(hasSixOutcomes);
+    console.log(hasOneScorer);
+    return hasSixOutcomes && hasOneResult && hasOneScorer;
+  }
 
-    for (const round of this.schedule) {
-      for (const match of round.matches) {
-        if (!match.prediction.outcome) {
-          allOutcomesSelected = false;
-        }
-        if (match.result) {
-          oneResultSelected = true;
-        }
-        if (match.prediction.scorer) {
-          oneScorerSelected = true;
-        }
-      }
+  trackByIndex(index: number): number {
+    return index;
+  }
+
+  updateResult(event: Event, index: number): void {
+    const inputElement = event.target as HTMLInputElement;
+    if (inputElement && this.selectedResultIndex !== index) {
+      inputElement.value = '';
     }
+  }
 
-    return allOutcomesSelected && oneResultSelected && oneScorerSelected;
+  selectResultNew(index: number): void {
+    this.selectedResultIndex = index;
+  }
+
+  clearResult(): void {
+    this.selectedResultIndex = null;
   }
 }
