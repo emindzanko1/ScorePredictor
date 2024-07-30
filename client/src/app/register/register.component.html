@@ -3,16 +3,19 @@
         <h1>Welcome</h1>
         <form #registerForm="ngForm" (ngSubmit)="register()">
             <div class="form-group">
-                <input type="text" placeholder="Username" required />
+                <input name="username" [(ngModel)]="model.username" type="text" placeholder="Username" required />
             </div>
             <div class="form-group">
-                <input type="email" placeholder="Email" required />
+                <input name="email" [(ngModel)]="model.email" type="email" placeholder="Email" required />
             </div>
             <div class="form-group">
-                <input type="password" placeholder="Password" required />
+                <input name="password" [(ngModel)]="model.password" type="password" placeholder="Password" required />
             </div>
-            <div class="form-group">
+            <!-- <div class="form-group">
                 <input type="password" placeholder="Confirm Password" required />
+            </div> -->
+            <div class="form-group">
+                <input name="fullname" [(ngModel)]="model.fullname" type="text" placeholder="Full Name" required />
             </div>
             <button type="submit">REGISTER</button>
             <a href="/" class="back-button">Home Page</a>

@@ -2,7 +2,7 @@ export interface User {
     id: number;
     username: string;
     email: string;
-    passwordHash: string;
+    token: string;
     points: number;
     lastLogin?: Date;
     createdAt: Date;

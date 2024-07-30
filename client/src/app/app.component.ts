@@ -1,7 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HomeComponent } from "./home/home.component";
 import { NavComponent } from "./nav/nav.component";
+import { HttpClient } from '@angular/common/http';
+import { AccountService } from './_services/account.service';
 
 @Component({
   selector: 'app-root',
@@ -11,5 +13,29 @@ import { NavComponent } from "./nav/nav.component";
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = 'client';
+  http = inject(HttpClient);
+  private accountService = inject(AccountService);
+  title = 'ScorePredictor';
+  users: any;
+
+  ngOnInit(): void {
+    this.getUsers();
+    this.setCurrentUser();
+  }
+
+  setCurrentUser() {
+    // console.log('setCurrentUser');
+    // const userString = localStorage.getItem('user');
+    // if (!userString) return;
+    // const user = JSON.parse(userString);
+    // this.accountService.currentUser.set(user);
+  }
+
+  getUsers() {
+    this.http.get('https://localhost:5001/api/users').subscribe({
+      next: response => this.users = response,
+      error: error => console.error('Error:', error),
+      complete: () => console.log('Users fetched!')
+    })
+  }
 }
