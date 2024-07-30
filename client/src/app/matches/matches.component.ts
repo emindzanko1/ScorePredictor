@@ -5,6 +5,7 @@ import { Player } from '../_models/player';
 import { PLAYERS_DATA } from '../data/players';
 import { TEAMS_DATA } from '../data/teams';
 import { Prediction } from '../_models/prediction';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-matches',
@@ -26,6 +27,7 @@ export class MatchesComponent {
     scorer: ''
   };
 
+
   getPlayersByClubs(home: string, away: string): Player[] {
     const homeClubId = this.getClubIdByName(home);
     const awayClubId = this.getClubIdByName(away);
@@ -38,6 +40,12 @@ export class MatchesComponent {
   }
 
   submitPrediction(): void {
+    Swal.fire({
+      title: "Good job!",
+      text: "You submitted your predictions!",
+      icon: "success",
+      timer: 3000
+    });
     console.log('Predictions submitted:', this.prediction);
   }
 
