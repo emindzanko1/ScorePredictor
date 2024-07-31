@@ -4,4 +4,5 @@ export interface Prediction {
     outcomes: string[];
     results: string[]; 
     scorer: string;
+    points: number
 }

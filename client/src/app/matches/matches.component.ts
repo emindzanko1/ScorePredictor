@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { SCHEDULE_DATA } from '../data/schedules';
 import { FormsModule } from '@angular/forms';
 import { Player } from '../_models/player';
@@ -6,6 +6,7 @@ import { PLAYERS_DATA } from '../data/players';
 import { TEAMS_DATA } from '../data/teams';
 import { Prediction } from '../_models/prediction';
 import Swal from 'sweetalert2';
+import { User } from '../_models/user';
 
 @Component({
   selector: 'app-matches',
@@ -15,18 +16,30 @@ import Swal from 'sweetalert2';
   styleUrls: ['./matches.component.css']
 })
 export class MatchesComponent {
+  currentUser = signal<User | null>(null);
   schedule = SCHEDULE_DATA;
   players = PLAYERS_DATA;
   teams = TEAMS_DATA;
   selectedScorer: any = null;
   prediction: Prediction = {
     id: 0,
-    userId: 1, 
+    userId: 0, 
     outcomes: Array(6).fill(''), 
     results: Array(6).fill(''),
-    scorer: ''
+    scorer: '',
+    points: 0,
   };
 
+  ngOnInit() {
+    this.loadCurrentUser();
+  }
+
+  loadCurrentUser() {
+    const user = localStorage.getItem('user');
+    if (user) {
+      this.currentUser.set(JSON.parse(user));
+    }
+  }
 
   getPlayersByClubs(home: string, away: string): Player[] {
     const homeClubId = this.getClubIdByName(home);

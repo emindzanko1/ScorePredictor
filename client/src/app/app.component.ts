@@ -19,21 +19,23 @@ export class AppComponent {
   users: any;
 
   ngOnInit(): void {
-    this.getUsers();
-    this.setCurrentUser();
+    // this.getUsers();
+    // this.setCurrentUser();
   }
 
   setCurrentUser() {
-    // console.log('setCurrentUser');
-    // const userString = localStorage.getItem('user');
-    // if (!userString) return;
-    // const user = JSON.parse(userString);
-    // this.accountService.currentUser.set(user);
+    const userString = localStorage.getItem('user');
+    if (!userString) return;
+    const user = JSON.parse(userString);
+    this.accountService.currentUser.set(user);
   }
 
   getUsers() {
     this.http.get('https://localhost:5001/api/users').subscribe({
-      next: response => this.users = response,
+      next: response => {
+        this.users = response,
+        console.log(response);
+      },
       error: error => console.error('Error:', error),
       complete: () => console.log('Users fetched!')
     })

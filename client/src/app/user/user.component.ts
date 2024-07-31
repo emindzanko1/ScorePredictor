@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '../_models/user';
 import { CommonModule } from '@angular/common';
-import { USERS } from '../data/users';
+import { UserService } from '../_services/user.service';
 
 @Component({
   selector: 'app-user',
@@ -14,20 +14,42 @@ import { USERS } from '../data/users';
 export class UserComponent {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private userService = inject(UserService);
   id = Number(this.route.snapshot.paramMap.get('id'));
-  user: User | undefined;
+  user?: User;
+  users: User[] = [];;
   rankedUsers: User[] = [];
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe(params => {
-      this.id = Number(params.get('id'));
-      this.user = USERS.find(user => user.id === this.id);
-    })
-    this.rankUsers();
+    this.loadUser();
+    this.loadUsers();
   }
 
-  rankUsers(): void {
-    this.rankedUsers = USERS.sort((a, b) => b.points - a.points);
+  loadUser() {
+    const id = Number(this.route.snapshot.paramMap.get('id'));
+    if (!id) return;
+    this.userService.getUser(id).subscribe({
+      next: user => {
+        this.user = user;
+        console.log(this.user);
+      },
+      error: error => console.error('Error retrieving user:', error)
+    })
+  }
+
+  loadUsers() {
+    this.userService.getUsers().subscribe({
+      next: users => {
+        this.users = users;
+        this.rankUsers(this.users);
+        console.log('Fetched users:', this.users);
+      },
+      error: error => console.error('Error retrieving users:', error)
+    });
+  }
+
+  rankUsers(users: User[]): void {
+    this.rankedUsers = users.sort((a, b) => b.points - a.points);
   }
 
   goToUserProfile(userId: number): void {
