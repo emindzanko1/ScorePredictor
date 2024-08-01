@@ -1,12 +1,12 @@
 export interface Match {
+    id: number;
+    result: string;
+    matchDateTime: string;
     date: string;
     time: string;
-    home: string;
-    away: string;
-    result: string;
-    prediction: {
-        outcome: '1' | 'X' | '2' | '-';  
-        correctResult?: string;    
-        scorer?: string;          
-    };
+    fixtureId: number;
+    homeTeamId: number;
+    awayTeamId: number;
+    homeTeamName: string;
+    awayTeamName: string;
 }

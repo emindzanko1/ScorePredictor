@@ -1,4 +1,4 @@
-export interface Team {
+export interface Fixture {
     id: number;
     name: string;
 }

@@ -1,7 +1,7 @@
 <form (ngSubmit)="submitPrediction()" #predictionForm="ngForm">
-    @for (round of schedule; track $index) {
+    @for (fixture of fixutres; track trackByFixture) {
     <div class="container">
-        <h3>{{ round.round }}</h3>
+        <h3>{{ fixture.name }}</h3>
         <table class="schedule">
             <tr>
                 <th>Date</th>
@@ -13,15 +13,15 @@
                 <th>Result</th>
                 <th>Scorer</th>
             </tr>
-            @for (match of round.matches; track $index) {
+            @for (match of getMatchesByFixture(fixture.id); track trackByMatch) {
             <tr>
                 <td>{{ match.date }}</td>
                 <td>{{ match.time }}</td>
-                <td>{{ match.home }}</td>
+                <td>{{ match.homeTeamName }}</td>
                 <td>-</td>
-                <td>{{ match.away }}</td>
+                <td>{{ match.awayTeamName }}</td>
                 <td>
-                    <select [(ngModel)]="prediction.outcomes[$index]" name="outcome-{{ match.home }}-{{ match.away }}"
+                    <select [(ngModel)]="prediction.outcomes[$index]" name="outcome-{{ match.homeTeamId }}-{{ match.awayTeamId }}"
                         required>
                         <option value="1">1</option>
                         <option value="X">X</option>
@@ -29,13 +29,13 @@
                     </select>
                 </td>
                 <td>
-                    <input [(ngModel)]="prediction.results[$index]" name="result-{{ match.home }}-{{ match.away }}"
+                    <input [(ngModel)]="prediction.results[$index]" name="result-{{ match.homeTeamId }}-{{ match.awayTeamId }}"
                         placeholder="Result" required />
                 </td>
                 <td>
                     <select class="player-select" [(ngModel)]="prediction.scorer"
-                        name="scorer-{{ match.home }}-{{ match.away }}" (change)="selectScorer(match)" required>
-                        @for (player of getPlayersByClubs(match.home, match.away); track $index) {
+                        name="scorer-{{ match.homeTeamId }}-{{ match.awayTeamId }}" (change)="selectScorer(match)" required>
+                        @for (player of getPlayersByClubs(match.homeTeamId, match.awayTeamId); track $index) {
                         <option [value]="player.name">
                             {{ player.name }}
                         </option>
