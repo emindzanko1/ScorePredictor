@@ -10,4 +10,5 @@ public class User
     public int Points { get; set; }
     public string? Picture { get; set; }
     public required string FullName { get; set; }
+    public ICollection<Prediction> Predictions { get; set; } = null!;
 }
