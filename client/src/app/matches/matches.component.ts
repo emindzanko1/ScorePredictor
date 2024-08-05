@@ -11,11 +11,14 @@ import { TeamsService } from '../_services/teams.service';
 import { FixturesService } from '../_services/fixtures.service';
 import { Fixture } from '../_models/fixture';
 import { PlayersService } from '../_services/players.service';
+import { WatchComponent } from "../watch/watch.component";
+import { FixtureDropdownComponent } from "../dropdown/dropdown.component";
+import { formatDate, formatTime, validatePrediction } from '../util/util';
 
 @Component({
   selector: 'app-matches',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, WatchComponent, FixtureDropdownComponent],
   templateUrl: './matches.component.html',
   styleUrls: ['./matches.component.css']
 })
@@ -27,9 +30,11 @@ export class MatchesComponent {
   currentUser = signal<User | null>(null);
   matches: Match[] = [];
   teams: Team[] = [];
-  fixutres: Fixture[] = [];
+  fixtures: Fixture[] = [];
   players: Player[] = [];
+  fixture?: Fixture;
   selectedScorer: any = null;
+  timerExpired: boolean = false;
   prediction: Prediction = {
     id: 0,
     userId: 0,
@@ -41,16 +46,19 @@ export class MatchesComponent {
 
   ngOnInit() {
     this.loadCurrentUser();
-    this.loadTeams(); 
+    this.loadTeams();
     this.loadFixtures();
     this.loadPlayers();
+  }
+
+  onCountdownExpired(): void {
+    this.timerExpired = true;
   }
 
   loadPlayers() {
     this.playersService.getPlayers().subscribe({
       next: players => {
         this.players = players;
-         console.log('Fetched players:', this.players);
       },
       error: error => console.error('Error retrieving players:', error)
     });
@@ -58,11 +66,10 @@ export class MatchesComponent {
 
   loadFixtures() {
     this.fixturesService.getFixtures().subscribe({
-      next: fixutres => {
-        this.fixutres = fixutres;
-        // console.log('Fetched fixutres:', this.fixutres);
+      next: fixtures => {
+        this.fixtures = fixtures;
       },
-      error: error => console.error('Error retrieving fixutres:', error)
+      error: error => console.error('Error retrieving fixtures:', error)
     });
   }
 
@@ -77,7 +84,6 @@ export class MatchesComponent {
     this.teamsService.getTeams().subscribe({
       next: teams => {
         this.teams = teams;
-        // console.log('Fetched teams:', this.teams);
         this.loadSchedules();
       },
       error: error => console.error('Error retrieving teams:', error)
@@ -91,27 +97,12 @@ export class MatchesComponent {
           ...match,
           homeTeamName: this.getTeamNameById(match.homeTeamId),
           awayTeamName: this.getTeamNameById(match.awayTeamId),
-          date: this.formatDate(match.matchDateTime),
-          time: this.formatTime(match.matchDateTime)
+          date: formatDate(match.matchDateTime),
+          time: formatTime(match.matchDateTime)
         }));
-        // console.log('Fetched matches:', this.matches);
       },
       error: error => console.error('Error retrieving matches:', error)
     });
-  }
-
-  formatDate(dateTime: string): string {
-    const date = new Date(dateTime);
-    return `${this.padTo2Digits(date.getDate())}.${this.padTo2Digits(date.getMonth() + 1)}.${date.getFullYear().toString().slice(-2)}`;
-  }
-
-  formatTime(dateTime: string): string {
-    const date = new Date(dateTime);
-    return `${this.padTo2Digits(date.getHours())}:${this.padTo2Digits(date.getMinutes())}`;
-  }
-
-  padTo2Digits(num: number): string {
-    return num.toString().padStart(2, '0');
   }
 
   getTeamNameById(teamId: number): string {
@@ -120,9 +111,6 @@ export class MatchesComponent {
   }
 
   getPlayersByClubs(home: number, away: number): Player[] {
-    console.log(home);
-    console.log(away);
-    console.log('tu')
     return this.players.filter(player => player.teamId === home || player.teamId === away);
   }
 
@@ -133,7 +121,6 @@ export class MatchesComponent {
       icon: "success",
       timer: 3000
     });
-    console.log('Predictions submitted:', this.prediction);
   }
 
   selectScorer(match: any): void {
@@ -144,26 +131,20 @@ export class MatchesComponent {
   }
 
   validatePredictions(): boolean {
-    const hasSixOutcomes = this.prediction.outcomes.length === 6 && this.prediction.outcomes.every(outcome => ['1', 'X', '2'].includes(outcome));
-    const allResultsValid = this.prediction.results.every(result =>
-      result.trim() === '' || /^\d+\s*:\s*\d+$/.test(result.trim())
-    );
-    const nonEmptyResultsCount = this.prediction.results.filter(result => result.trim() !== '').length;
-    const hasOneResult = nonEmptyResultsCount === 1;
-    const hasOneScorer = this.prediction.scorer.trim() !== '';
-    return hasSixOutcomes && allResultsValid && hasOneResult && hasOneScorer;
+    return !this.timerExpired;
   }
 
   getMatchesByFixture(fixtureId: number): Match[] {
     return this.matches.filter(match => match.fixtureId === fixtureId);
   }
-  
-  trackByFixture(index: number, fixture: Fixture): number {
-    return fixture.id;
+
+  onFixtureSelected(fixtureId: number): void {
+    this.fixturesService.getFixture(fixtureId).subscribe({
+      next: fixture => {
+        this.fixture = fixture;
+        this.matches = this.getMatchesByFixture(fixtureId);
+      },
+      error: error => console.error('Error retrieving fixture:', error)
+    })
   }
-  
-  trackByMatch(index: number, match: Match): number {
-    return match.id;
-  }
-  
 }

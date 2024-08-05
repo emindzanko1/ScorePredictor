@@ -10,7 +10,7 @@ h3 {
 }
 
 .schedule {
-    width: 90%;
+    width: 100%;
     max-width: 1200px;
     border-collapse: collapse;
     margin: 0 auto;
@@ -105,7 +105,8 @@ td>select.player-select {
     font-weight: bold;
     text-align: center;
     color: #ffffff;
-    background: linear-gradient(45deg, #004e92, #000428);
+    /* background: linear-gradient(45deg, #004e92, #000428); */
+    background: linear-gradient(45deg, #03dff3, #ff05d5); 
     border: none;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -115,7 +116,8 @@ td>select.player-select {
 }
 
 .submit-btn:hover {
-    background: linear-gradient(45deg, #005fa3, #002345);
+    /* background: linear-gradient(45deg, #005fa3, #002345); */
+    background: linear-gradient(45deg, #03a9f4, #ff05d5); 
     box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
 }
 
@@ -128,4 +130,12 @@ td>select.player-select {
 .submit-btn:focus {
     outline: none;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+
+.container {
+    margin-bottom: 5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;  
 }

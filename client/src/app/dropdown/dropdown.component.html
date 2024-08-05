@@ -1,0 +1,10 @@
+<div class="dropdown">
+    <select (change)="onFixtureChange($event)">
+        <option value="">Select Fixture</option>
+        @for (fixture of fixtures(); track $index) {
+        <option [value]="fixture.id">
+            {{ fixture.name }}
+        </option>
+        }
+    </select>
+</div>
