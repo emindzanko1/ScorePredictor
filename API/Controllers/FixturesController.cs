@@ -15,4 +15,14 @@ public class FixturesController(DataContext context) : BaseApiController
         var fixtures = await context.Fixtures.ToListAsync();
         return Ok(fixtures);
     }
+
+    [HttpGet("{id}")]
+    public async Task<ActionResult<Fixture>> GetFixture(int id)
+    {
+        var fixture = await context.Fixtures.FindAsync(id);
+
+        if (fixture == null) return NotFound();
+
+        return fixture;
+    }
 }
