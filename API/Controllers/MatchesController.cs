@@ -15,5 +15,12 @@ public class MatchesController(DataContext context) : BaseApiController
         var matches = await context.Matches.ToListAsync();
         return Ok(matches);
     }
+
+    [HttpGet("{id}")]
+    public async Task<ActionResult<IEnumerable<Match>>> GetMatchesByFixtureId(int id)
+    {
+        var matches = await context.Matches.Where(x => x.FixtureId == id).ToListAsync();
+        return Ok(matches);
+    }
 }
 

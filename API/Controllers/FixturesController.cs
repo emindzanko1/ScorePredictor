@@ -25,4 +25,19 @@ public class FixturesController(DataContext context) : BaseApiController
 
         return fixture;
     }
+
+    [HttpGet("upcoming")]
+    public async Task<ActionResult<Fixture>> GetUpcomingFixture()
+    {
+        var now = DateTime.UtcNow;
+        var upcomingFixture = await context.Fixtures
+            .Include(f => f.Matches)
+            .OrderBy(f => f.Matches.Min(m => m.MatchDateTime))
+            .FirstOrDefaultAsync(f => f.Matches.Any(m => m.MatchDateTime > now));
+
+        if (upcomingFixture == null)
+            return NotFound("No upcoming fixtures found.");
+
+        return Ok(upcomingFixture);
+    }
 }
