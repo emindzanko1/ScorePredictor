@@ -1,11 +1,10 @@
 <div class="container">
     <app-fixture-dropdown [fixtures]="fixtures" (selectedFixture)="onFixtureSelected($event)"></app-fixture-dropdown>
     <form (ngSubmit)="submitPrediction()" #predictionForm="ngForm">
-        @for (fixture of fixtures; track $index) {
-        <app-watch [fixture]="fixture" [matches]="getMatchesByFixture(fixture.id)"
-            (countdownExpired)="onCountdownExpired()"></app-watch>
+        <!-- @for (fixture of fixtures; track $index) { -->
+        <app-watch [fixture]="fixture" [matches]="getMatchesByFixture(fixture?.id)"></app-watch>
         <div class="container">
-            <h3>{{ fixture.name }}</h3>
+            <h3>{{ fixture?.name }}</h3>
             <table class="schedule">
                 <tr>
                     <th>Date</th>
@@ -17,7 +16,7 @@
                     <th>Result</th>
                     <th>Scorer</th>
                 </tr>
-                @for (match of getMatchesByFixture(fixture.id); track $index) {
+                @for (match of getMatchesByFixture(fixture?.id); track $index) {
                 <tr>
                     <td>{{ match.date }}</td>
                     <td>{{ match.time }}</td>
@@ -51,9 +50,8 @@
                 }
             </table>
             <br>
-            <button type="submit" class="submit-btn" [disabled]="validatePredictions()">Submit
-                Predictions</button>
+            <button type="submit" class="submit-btn" [disabled]="!validatePredictions()">Submit Predictions</button>
         </div>
-        }
+        <!-- } -->
     </form>
 </div>

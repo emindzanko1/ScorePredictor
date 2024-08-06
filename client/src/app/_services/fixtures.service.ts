@@ -25,4 +25,8 @@ export class FixturesService {
 
     return this.http.get<Fixture>(this.baseUrl + 'fixtures/' + id);
   }
+
+  getUpcomingFixture() {
+    return this.http.get<Fixture>(this.baseUrl + 'fixtures/upcoming');
+  }
 }

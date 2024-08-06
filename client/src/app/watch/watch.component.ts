@@ -15,7 +15,6 @@ export class WatchComponent implements OnInit {
   
   @Input() fixture: Fixture | undefined;
   @Input() matches: Match[] = [];
-  @Output() countdownExpired = new EventEmitter<void>();
 
   ngOnInit(): void {
     this.updateTime();
@@ -41,7 +40,6 @@ export class WatchComponent implements OnInit {
           this.hours = '00';
           this.minutes = '00';
           this.seconds = '00';
-          this.countdownExpired.emit();
         }
       }
     };

@@ -28,15 +28,17 @@ export class MatchesComponent {
   private fixturesService = inject(FixturesService);
   private playersService = inject(PlayersService);
   currentUser = signal<User | null>(null);
+  allMatches: Match[] = [];
+  matchesByFixture: Match[] = [];
   matches: Match[] = [];
   teams: Team[] = [];
   fixtures: Fixture[] = [];
   players: Player[] = [];
   fixture?: Fixture;
+  currentFixture?: Fixture;
   selectedScorer: any = null;
-  timerExpired: boolean = false;
   prediction: Prediction = {
-    id: 0,
+    id: 0, // fixture id
     userId: 0,
     outcomes: Array(6).fill(''),
     results: Array(6).fill(''),
@@ -49,10 +51,7 @@ export class MatchesComponent {
     this.loadTeams();
     this.loadFixtures();
     this.loadPlayers();
-  }
-
-  onCountdownExpired(): void {
-    this.timerExpired = true;
+    this.loadCurrentFixture();
   }
 
   loadPlayers() {
@@ -93,7 +92,7 @@ export class MatchesComponent {
   loadSchedules() {
     this.matchesService.getMatches().subscribe({
       next: matches => {
-        this.matches = matches.map(match => ({
+        this.allMatches = matches.map(match => ({
           ...match,
           homeTeamName: this.getTeamNameById(match.homeTeamId),
           awayTeamName: this.getTeamNameById(match.awayTeamId),
@@ -102,6 +101,17 @@ export class MatchesComponent {
         }));
       },
       error: error => console.error('Error retrieving matches:', error)
+    });
+  }
+
+  loadCurrentFixture() {
+    this.fixturesService.getUpcomingFixture().subscribe({
+      next: fixture => {
+        this.fixture = fixture;
+        this.currentFixture = fixture;
+        this.matches = this.getMatchesByFixture(this.fixture.id);
+      },
+      error: error => console.error('Error retrieving fixture:', error)
     });
   }
 
@@ -130,21 +140,22 @@ export class MatchesComponent {
     this.selectedScorer = match;
   }
 
-  validatePredictions(): boolean {
-    return !this.timerExpired;
+  validatePredictions(): boolean  {
+    return validatePrediction(this.prediction, this.currentFixture?.id!, this.fixture?.id!)
   }
 
-  getMatchesByFixture(fixtureId: number): Match[] {
-    return this.matches.filter(match => match.fixtureId === fixtureId);
+  getMatchesByFixture(fixtureId: number | undefined): Match[] {
+    const newMatches = this.allMatches.filter(match => match.fixtureId === fixtureId)
+    return newMatches;
   }
 
   onFixtureSelected(fixtureId: number): void {
     this.fixturesService.getFixture(fixtureId).subscribe({
       next: fixture => {
         this.fixture = fixture;
-        this.matches = this.getMatchesByFixture(fixtureId);
+        this.matches = this.getMatchesByFixture(fixtureId) 
       },
       error: error => console.error('Error retrieving fixture:', error)
-    })
+    });
   }
 }
