@@ -41,6 +41,24 @@ p {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
+button {
+  margin-top: 2.5rem;
+  padding: 13px 68px;
+  border: 0;
+  color: #ffffff;
+  background: linear-gradient(to left, #48C4D8 14.81%, #007DD6 70.37%, #3F5FFF 100%);
+  transition: 0.5s;
+  background-size: 150% auto;
+  text-transform: uppercase;
+  white-space: normal !important;
+  font-weight: 700;
+  border-radius: 27px;
+  text-decoration: none;
+  letter-spacing: 0.2px;
+  font-size: 18px;
+}
+
+
 h2 {
   font-size: 2.5em;
   color: #ffffff;
@@ -82,4 +100,28 @@ h2 {
 
 .highlight {
   background: linear-gradient(to left, #48C4D8 14.81%, #007DD6 70.37%, #3F5FFF 100%);
+}
+
+button {
+  padding: 13px 68px;
+  border: 0;
+  color: #ffffff;
+  background: linear-gradient(to left, #48C4D8 14.81%, #007DD6 70.37%, #3F5FFF 100%);
+  transition: 0.5s;
+  background-size: 150% auto;
+  text-transform: uppercase;
+  white-space: normal !important;
+  font-weight: 700;
+  border-radius: 27px;
+  /* padding: 13px 35px; */
+  text-decoration: none;
+  letter-spacing: 0.2px;
+  font-size: 18px;
+}
+
+button:hover {
+  background: linear-gradient(to left, #6ad0e5 14.81%, #00a0e9 70.37%, #5a7fff 100%);
+  /* color: #004e92; */
+  color: #ffffff;
+  cursor: pointer;
 }

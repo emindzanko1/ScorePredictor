@@ -59,4 +59,10 @@ export class UserComponent {
   isCurrentUser(userId: number): boolean {
     return userId === this.id;
   }
+
+  test() {
+    // console.log('Test');
+    this.router.navigate(['/matches']);
+    // this.userService.getUsers().subscribe(users => console.log(users));
+  }
 }

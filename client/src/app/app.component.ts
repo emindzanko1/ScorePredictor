@@ -19,8 +19,8 @@ export class AppComponent {
   users: any;
 
   ngOnInit(): void {
-    // this.getUsers();
-    // this.setCurrentUser();
+    this.getUsers();
+    this.setCurrentUser();
   }
 
   setCurrentUser() {
