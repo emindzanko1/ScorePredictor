@@ -4,6 +4,7 @@ import { HomeComponent } from "./home/home.component";
 import { NavComponent } from "./nav/nav.component";
 import { HttpClient } from '@angular/common/http';
 import { AccountService } from './_services/account.service';
+import { sweetError } from './util/util';
 
 @Component({
   selector: 'app-root',
@@ -33,10 +34,9 @@ export class AppComponent {
   getUsers() {
     this.http.get('https://localhost:5001/api/users').subscribe({
       next: response => {
-        this.users = response,
-        console.log(response);
+        this.users = response
       },
-      error: error => console.error('Error:', error),
+      error: _ => sweetError('Error'),
       complete: () => console.log('Users fetched!')
     })
   }

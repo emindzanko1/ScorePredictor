@@ -2,7 +2,6 @@
      display: flex;
      flex-direction: column;
      justify-content: center;
-     /* justify-content: flex-start;      */
      align-items: center;
      height: 100vh;
      font-family: 'Arial', sans-serif;
@@ -16,7 +15,6 @@
      font-size: 5.5em;
      margin: 0.25em 0;
      text-align: center;
-     /*  */
      color: #d8ecf8;
      background: var(--gradient-loud-100, linear-gradient(0deg, #d8ecf8 0, #98c0ef 100%));
      background-clip: text;
@@ -53,7 +51,6 @@
      white-space: normal !important;
      font-weight: 700;
      border-radius: 27px;
-     /* padding: 13px 35px; */
      text-decoration: none;
      letter-spacing: 0.2px;
      font-size: 18px;
@@ -61,109 +58,44 @@
 
  button:hover {
      background: linear-gradient(to left, #6ad0e5 14.81%, #00a0e9 70.37%, #5a7fff 100%);
-     /* color: #004e92; */
      color: #ffffff;
      cursor: pointer;
  }
 
- /* button.register {
-    background: transparent;
-    border: 2px solid linear-gradient(to left, #48C4D8 14.81%, #007DD6 70.37%, #3F5FFF 100%);
-    color: #ffffff;
-    padding: 13px 68px;
-    font-size: 18px;
-    font-weight: 700;
-    border-radius: 27px;
-    text-transform: uppercase;
-    letter-spacing: 0.2px;
-    transition: 0.5s;
-    background-clip: padding-box; 
-    position: relative;
-    overflow: hidden;
-}
+ button.register {
+     background: transparent;
+     border: 2px solid linear-gradient(to left, #48C4D8 14.81%, #007DD6 70.37%, #3F5FFF 100%);
+     color: #ffffff;
+     padding: 13px 68px;
+     font-size: 18px;
+     font-weight: 700;
+     border-radius: 27px;
+     text-transform: uppercase;
+     letter-spacing: 0.2px;
+     position: relative;
+     overflow: hidden;
+     transition: color 0.5s, background-color 0.5s;
+ }
 
-button.register::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(to left, #6ad0e5 14.81%, #00a0e9 70.37%, #5a7fff 100%);
-    transition: 0.5s;
-    z-index: -1;
-    transform: scaleX(0);
-    transform-origin: bottom right;
-}
+ button.register::before {
+     content: '';
+     position: absolute;
+     top: 0;
+     left: 0;
+     width: 100%;
+     height: 100%;
+     background: linear-gradient(to left, #6ad0e5 14.81%, #00a0e9 70.37%, #5a7fff 100%);
+     transition: transform 0.5s;
+     transform: scaleX(0);
+     transform-origin: bottom right;
+     z-index: -1;
+ }
 
-button.register:hover::before {
-    transform: scaleX(1);
-    transform-origin: bottom left;
-}
+ button.register:hover {
+     color: #ffffff;
+ }
 
-button.register:hover {
-    color: #ffffff;
-} */
-
-/* button.register {
-    background: transparent;
-    border: 2px solid linear-gradient(to left, #48C4D8 14.81%, #007DD6 70.37%, #3F5FFF 100%);
-    color: #ffffff;
-    padding: 13px 68px;
-    font-size: 18px;
-    font-weight: 700;
-    border-radius: 27px;
-    text-transform: uppercase;
-    letter-spacing: 0.2px;
-    position: relative;
-    overflow: hidden;
-    transition: color 0.5s, background-color 0.5s;
-}
-
-button.register::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(to left, #6ad0e5 14.81%, #00a0e9 70.37%, #5a7fff 100%);
-    transition: transform 0.5s;
-    transform: scaleX(0);
-    transform-origin: bottom right;
-    z-index: -1;
-}
-
-button.register:hover {
-    color: #ffffff;
-}
-
-button.register:hover::before {
-    transform: scaleX(1);
-    transform-origin: bottom left;
-} */
-
-button.register {
-    padding: 13px 68px;
-    border: 2px solid transparent;
-    color: #ffffff; 
-    background: transparent; 
-    transition: 0.5s;
-    background-size: 150% auto;
-    text-transform: uppercase;
-    white-space: normal !important;
-    font-weight: 700;
-    border-radius: 27px;
-    text-decoration: none;
-    letter-spacing: 0.2px;
-    font-size: 18px;
-    border-image: linear-gradient(to left, #48C4D8 14.81%, #007DD6 70.37%, #3F5FFF 100%);
-    border-image-slice: 1;
-}
-
-button.register:hover {
-    background: linear-gradient(to left, #48C4D8 14.81%, #007DD6 70.37%, #3F5FFF 100%);
-    color: #ffffff;
-    cursor: pointer;
-    border: 0; 
-}
+ button.register:hover::before {
+     transform: scaleX(1);
+     transform-origin: bottom left;
+ }

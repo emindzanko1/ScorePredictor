@@ -2,7 +2,6 @@ import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Player } from '../_models/player';
 import { Prediction } from '../_models/prediction';
-import Swal from 'sweetalert2';
 import { User } from '../_models/user';
 import { MatchesService } from '../_services/matches.service';
 import { Match } from '../_models/match';
@@ -13,7 +12,7 @@ import { Fixture } from '../_models/fixture';
 import { PlayersService } from '../_services/players.service';
 import { WatchComponent } from "../watch/watch.component";
 import { FixtureDropdownComponent } from "../dropdown/dropdown.component";
-import { formatDate, formatTime, validatePrediction } from '../util/util';
+import { formatDate, formatTime, sweetError, sweetSuccess, validatePrediction } from '../util/util';
 import { PredictionsService } from '../_services/predictions.service';
 
 @Component({
@@ -38,16 +37,12 @@ export class MatchesComponent {
   players: Player[] = [];
   fixture?: Fixture;
   currentFixture?: Fixture;
-  // selectedScorer: Player | null = null;
   selectedScorer: any = null;
   scorerName: string = '';
-  // prediction?: Prediction;
   prediction: Prediction = {
     userId: 0,
     outcomes: Array(6).fill(''),
     results: Array(6).fill(''),
-    // scorer: '',
-    // scorer: undefined,
     points: 0,
     fixtureId: 0,
     playerId: 0,
@@ -59,41 +54,6 @@ export class MatchesComponent {
     this.loadFixtures();
     this.loadPlayers();
     this.loadCurrentFixture();
-    // this.loadExistingPrediction(); 
-  }
-
-  loadPrediction() {
-    this.prediction.userId = this.currentUser()?.id!;
-    this.prediction.fixtureId = this.currentFixture?.id!;
-    if (this.currentUser()?.id && this.currentFixture?.id) {
-      console.log('sam')
-      this.predictionsService.getPrediction(this.currentUser()!.id, this.currentFixture.id).subscribe({
-        next: prediction => {
-          this.prediction = prediction;
-          console.log(this.prediction)
-          this.updateFormFields();
-        },
-        error: error => console.error('Error retrieving prediction:', error)
-      });
-    }
-  }
-
-  loadPlayers() {
-    this.playersService.getPlayers().subscribe({
-      next: players => {
-        this.players = players;
-      },
-      error: error => console.error('Error retrieving players:', error)
-    });
-  }
-
-  loadFixtures() {
-    this.fixturesService.getFixtures().subscribe({
-      next: fixtures => {
-        this.fixtures = fixtures;
-      },
-      error: error => console.error('Error retrieving fixtures:', error)
-    });
   }
 
   loadCurrentUser() {
@@ -109,7 +69,37 @@ export class MatchesComponent {
         this.teams = teams;
         this.loadSchedules();
       },
-      error: error => console.error('Error retrieving teams:', error)
+      error: _ => sweetError('Error retrieving teams')
+    });
+  }
+
+  loadFixtures() {
+    this.fixturesService.getFixtures().subscribe({
+      next: fixtures => {
+        this.fixtures = fixtures;
+      },
+      error: _ => sweetError('Error retrieving fixtures')
+    });
+  }
+
+  loadPlayers() {
+    this.playersService.getPlayers().subscribe({
+      next: players => {
+        this.players = players;
+      },
+      error: _ => sweetError('Error retrieving players')
+    });
+  }
+
+  loadCurrentFixture() {
+    this.fixturesService.getUpcomingFixture().subscribe({
+      next: fixture => {
+        this.fixture = fixture;
+        this.currentFixture = fixture;
+        this.matches = this.getMatchesByFixture(this.fixture.id);
+        this.loadPrediction();
+      },
+      error: _ => sweetError('Error retrieving fixture')
     });
   }
 
@@ -124,23 +114,23 @@ export class MatchesComponent {
           time: formatTime(match.matchDateTime)
         }));
       },
-      error: error => console.error('Error retrieving matches:', error)
+      error: _ => sweetError('Error retrieving matches')
     });
   }
 
-  loadCurrentFixture() {
-    this.fixturesService.getUpcomingFixture().subscribe({
-      next: fixture => {
-        this.fixture = fixture;
-        this.currentFixture = fixture;
-        this.matches = this.getMatchesByFixture(this.fixture.id);
-        this.loadPrediction();
-      },
-      error: error => console.error('Error retrieving fixture:', error)
-    });
+  loadPrediction() {
+    this.prediction.userId = this.currentUser()?.id!;
+    this.prediction.fixtureId = this.currentFixture?.id!;
+    if (this.currentUser()?.id && this.currentFixture?.id) {
+      this.predictionsService.getPrediction(this.currentUser()!.id, this.currentFixture.id).subscribe({
+        next: prediction => {
+          this.prediction = prediction;
+          this.updateFormFields();
+        },
+        error: _ => sweetError('Error retrieving prediction')
+      });
+    }
   }
-
-
 
   updateFormFields() {
     this.matches.forEach((match, index) => {
@@ -165,7 +155,6 @@ export class MatchesComponent {
     });
   }
 
-
   getTeamNameById(teamId: number): string {
     const team = this.teams.find(t => t.id === teamId);
     return team ? team.name : 'Unknown Team';
@@ -175,60 +164,18 @@ export class MatchesComponent {
     return this.players.filter(player => player.teamId === home || player.teamId === away);
   }
 
-  // submitPrediction(): void {
-  //   console.log(this.prediction);
-  //   Swal.fire({
-  //     title: "Good job!",
-  //     text: "You submitted your predictions!",
-  //     icon: "success",
-  //     timer: 3000
-  //   });
-  // }
-
-  // selectScorer(event: any, match: Match): void {
-  //   // if (this.selectedScorer) {
-  //   //   this.selectedScorer.prediction.scorer = '';
-  //   // }
-  //   // this.selectedScorer = scorer;
-  //   const value = event.target.value;
-  //   const [id, name] = value.split('|');
-
-  //   const playerId = parseInt(id, 10);
-
-  //   this.playersService.getPlayerById(playerId).subscribe({
-  //     next: player => {
-  //       this.prediction.scorer = player;
-  //       console.log(this.prediction.scorer);
-  //     },
-  //     error: error => {
-  //       console.error('Error retrieving player details:', error);
-  //     }
-  //   });
-  // }
-
   selectScorer(event: any, match: Match): void {
     const value = event.target.value;
-    console.log(value);
     const [id, name] = value.split('|');
     const playerId = parseInt(id, 10);
     this.prediction.playerId = playerId;
-
-    // this.playersService.getPlayerById(playerId).subscribe({
-    //   next: player => {
-    //     this.prediction.scorer = player;
-    //   },
-    //   error: error => {
-    //     console.error('Error retrieving player details:', error);
-    //   }
-    // });
   }
   validatePredictions(): boolean {
     return validatePrediction(this.prediction!, this.currentFixture?.id!, this.fixture?.id!)
   }
 
   getMatchesByFixture(fixtureId: number | undefined): Match[] {
-    const newMatches = this.allMatches.filter(match => match.fixtureId === fixtureId)
-    return newMatches;
+    return this.allMatches.filter(match => match.fixtureId === fixtureId);
   }
 
   onFixtureSelected(fixtureId: number): void {
@@ -237,7 +184,7 @@ export class MatchesComponent {
         this.fixture = fixture;
         this.matches = this.getMatchesByFixture(fixtureId)
       },
-      error: error => console.error('Error retrieving fixture:', error)
+      error: _ => sweetError('Error retrieving fixture')
     });
   }
 
@@ -251,33 +198,16 @@ export class MatchesComponent {
         playerId: this.prediction.playerId,
         points: 0,
       };
-      console.log(prediction);
       this.predictionsService.submitPrediction(prediction).subscribe({
         next: _ => {
-          Swal.fire({
-            title: "Success!",
-            text: "Your predictions have been submitted.",
-            icon: "success",
-            timer: 3000
-          });
+          sweetSuccess("Your predictions have been submitted.");
         },
-        error: error => {
-          console.error('Error submitting prediction:', error);
-          Swal.fire({
-            title: "Error!",
-            text: "There was an error submitting your predictions.",
-            icon: "error",
-            timer: 3000
-          });
+        error: _ => {
+          sweetError("There was an error submitting your predictions.");
         }
       });
     } else {
-      Swal.fire({
-        title: "Invalid Predictions!",
-        text: "Please complete all required fields before submitting.",
-        icon: "warning",
-        timer: 3000
-      });
+      sweetError("Please complete all required fields before submitting.", "Invalid Predictions!");
     }
   }
 }

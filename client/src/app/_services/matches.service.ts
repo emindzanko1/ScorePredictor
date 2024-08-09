@@ -2,13 +2,14 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { Match } from '../_models/match';
 import { Observable, of, switchMap } from 'rxjs';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MatchesService {
   private http = inject(HttpClient);
-  baseUrl = 'https://localhost:5001/api/';
+  baseUrl = environment.apiUrl;
   matches = signal<Match[]>([]);
 
   getMatches(): Observable<Match[]> {

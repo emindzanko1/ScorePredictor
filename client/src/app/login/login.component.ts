@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AccountService } from '../_services/account.service';
-import Swal from 'sweetalert2';
+import { sweetError } from '../util/util';
 
 @Component({
   selector: 'app-login',
@@ -22,16 +22,8 @@ export class LoginComponent {
         const id = response.id;
         this.router.navigateByUrl(`user/${id}`);
       },
-      error: _ => {
-        Swal.fire({
-          icon: "error",
-          title: "Oops...",
-          text: "Invalid credentials",
-          timer: 2000
-        });
-      }
+      error: _ => sweetError("Invalid credentials")
     });
-    // this.router.navigateByUrl('user/1');
   }
 
   logout () {

@@ -1,3 +1,4 @@
+import Swal from "sweetalert2";
 import { Prediction } from "../_models/prediction";
 
 export function formatDate(dateTime: string): string {
@@ -23,4 +24,22 @@ export function validatePrediction(prediction: Prediction, id: number, newId: nu
 
 function padTo2Digits(num: number): string {
     return num.toString().padStart(2, '0');
+}
+
+export function sweetSuccess(message: string, title: string = 'Success!'): void {
+    Swal.fire({
+        title: title,
+        text: message,
+        icon: 'success',
+        timer: 3000
+    });
+}
+
+export function sweetError(message: string, title: string = 'Error!'): void {
+    Swal.fire({
+        title: title,
+        text: message,
+        icon: 'error',
+        timer: 3000
+    });
 }

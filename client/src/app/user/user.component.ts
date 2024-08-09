@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '../_models/user';
 import { CommonModule } from '@angular/common';
 import { UserService } from '../_services/user.service';
+import { sweetError } from '../util/util';
 
 @Component({
   selector: 'app-user',
@@ -31,9 +32,8 @@ export class UserComponent {
     this.userService.getUser(id).subscribe({
       next: user => {
         this.user = user;
-        console.log(this.user);
       },
-      error: error => console.error('Error retrieving user:', error)
+      error: _ => sweetError('Error retrieving user')
     })
   }
 
@@ -42,9 +42,8 @@ export class UserComponent {
       next: users => {
         this.users = users;
         this.rankUsers(this.users);
-        console.log('Fetched users:', this.users);
       },
-      error: error => console.error('Error retrieving users:', error)
+      error: _ => sweetError('Error retrieving user')
     });
   }
 
@@ -60,9 +59,7 @@ export class UserComponent {
     return userId === this.id;
   }
 
-  test() {
-    // console.log('Test');
+  play() {
     this.router.navigate(['/matches']);
-    // this.userService.getUsers().subscribe(users => console.log(users));
   }
 }

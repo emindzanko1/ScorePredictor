@@ -106,7 +106,6 @@ td>select.player-select {
     font-weight: bold;
     text-align: center;
     color: #ffffff;
-    /* background: linear-gradient(45deg, #004e92, #000428); */
     background: linear-gradient(45deg, #03dff3, #ff05d5); 
     border: none;
     border-radius: 10px;
@@ -117,7 +116,6 @@ td>select.player-select {
 }
 
 .submit-btn:hover {
-    /* background: linear-gradient(45deg, #005fa3, #002345); */
     background: linear-gradient(45deg, #03a9f4, #ff05d5); 
     box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
 }

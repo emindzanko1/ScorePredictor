@@ -2,13 +2,14 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Prediction } from '../_models/prediction';
 import { Observable } from 'rxjs';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PredictionsService {
   private http = inject(HttpClient);
-  private baseUrl = 'https://localhost:5001/api/'; 
+  baseUrl = environment.apiUrl;
 
   getPrediction(userId: number, fixtureId: number): Observable<Prediction> {
     return this.http.get<Prediction>(`${this.baseUrl}predictions/${userId}/${fixtureId}`);
