@@ -3,6 +3,7 @@ using System;
 using API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240809121946_UpdatedNullFieldsMigration")]
+    partial class UpdatedNullFieldsMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.7");
@@ -124,14 +127,14 @@ namespace API.Data.Migrations
                     b.Property<string>("Outcomes")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("PlayerId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<int>("Points")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Results")
+                    b.Property<string>("Result")
                         .HasColumnType("TEXT");
+
+                    b.Property<int?>("ScorerId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("UserId")
                         .HasColumnType("INTEGER");
@@ -140,7 +143,7 @@ namespace API.Data.Migrations
 
                     b.HasIndex("FixtureId");
 
-                    b.HasIndex("PlayerId");
+                    b.HasIndex("ScorerId");
 
                     b.HasIndex("UserId");
 
@@ -264,11 +267,9 @@ namespace API.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("API.Entities.Player", "Player")
+                    b.HasOne("API.Entities.Player", "Scorer")
                         .WithMany()
-                        .HasForeignKey("PlayerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ScorerId");
 
                     b.HasOne("API.Entities.User", "User")
                         .WithMany("Predictions")
@@ -278,7 +279,7 @@ namespace API.Data.Migrations
 
                     b.Navigation("Fixture");
 
-                    b.Navigation("Player");
+                    b.Navigation("Scorer");
 
                     b.Navigation("User");
                 });

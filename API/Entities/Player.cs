@@ -6,6 +6,6 @@ public class Player
     public string Name { get; set; } = null!;
     public int TotalGoals { get; set; }
     public int TeamId { get; set; }
-    public Team Team { get; set; } = null!;
-    public ICollection<MatchScorer> MatchScorers { get; set; } = null!;
+    public Team? Team { get; set; }
+    public ICollection<MatchScorer>? MatchScorers;
 }
