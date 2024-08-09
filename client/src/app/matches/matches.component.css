@@ -91,6 +91,7 @@ td>select {
 td>select.player-select {
     width: auto;
     max-width: 180px;
+    color: white;
 }
 
 .submit-cell {

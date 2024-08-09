@@ -19,4 +19,11 @@ export class PlayersService {
       })
     );
   }
+
+  getPlayerById(id: number) {
+    const player = this.players().find(player => player.id === id);
+    if (player !== undefined) return of(player);
+
+    return this.http.get<Player>(this.baseUrl + 'player/' + id);
+  }
 }

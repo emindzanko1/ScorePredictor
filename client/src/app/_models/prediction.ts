@@ -1,8 +1,13 @@
+import { Player } from "./player";
+
 export interface Prediction {
-    id: number;
+    // id: number;
     userId: number;
     outcomes: string[];
     results: string[]; 
-    scorer: string;
-    points: number
+    // scorer?: Player;
+    // scorer: string;
+    points: number,
+    fixtureId: number,
+    playerId: number,
 }

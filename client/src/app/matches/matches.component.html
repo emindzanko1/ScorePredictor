@@ -36,11 +36,11 @@
                             name="result-{{ match.homeTeamId }}-{{ match.awayTeamId }}" placeholder="Result" required />
                     </td>
                     <td>
-                        <select class="player-select" [(ngModel)]="prediction.scorer"
-                            name="scorer-{{ match.homeTeamId }}-{{ match.awayTeamId }}" (change)="selectScorer(match)"
-                            required>
+                        <select class="player-select" [(ngModel)]="scorerName"
+                            name="scorer-{{ match.homeTeamId }}-{{ match.awayTeamId }}"
+                            (change)="selectScorer($event, match)" required>
                             @for (player of getPlayersByClubs(match.homeTeamId, match.awayTeamId); track $index) {
-                            <option [value]="player.name">
+                            <option [value]="player.id + '|' + player.name" >
                                 {{ player.name }}
                             </option>
                             }

@@ -17,7 +17,7 @@ export function validatePrediction(prediction: Prediction, id: number, newId: nu
     );
     const nonEmptyResultsCount = prediction.results.filter(result => result.trim() !== '').length;
     const hasOneResult = nonEmptyResultsCount === 1;
-    const hasOneScorer = prediction.scorer.trim() !== '';
+    const hasOneScorer = prediction.playerId !== 0;
     return hasSixOutcomes && allResultsValid && hasOneResult && hasOneScorer && id <= newId;
 }
 
