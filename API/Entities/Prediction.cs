@@ -10,7 +10,7 @@ public class Prediction
     public Fixture? Fixture { get; set; }
     public List<string>? Outcomes { get; set; }
     public List<string>? Results { get; set; }
-    public int PlayerId { get; set; }
+    public int? PlayerId { get; set; }
     public Player? Player { get; set; }
 }
 
