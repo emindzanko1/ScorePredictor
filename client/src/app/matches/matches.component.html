@@ -55,7 +55,7 @@
     </form>
     }
     @else {
-    <form (ngSubmit)="submitActualResults()" class="results-form">
+    <form (ngSubmit)="submitPrediction()" class="results-form">
         <h3>Submit Actual Scorers</h3>
         @for (match of getMatchesByFixture(fixture?.id); track $index) {
         <div class="match-container">
@@ -84,7 +84,7 @@
                     </div>
                 </div>
                 <div class="vs-separator">
-                    <span>VS</span>
+                    <span></span>
                 </div>
                 <div class="team-column">
                     <h4>{{ match.awayTeamName }}</h4>
@@ -107,7 +107,7 @@
             </div>
         </div>
         }
-        <button type="submit" [disabled]="!isResultsValid()" class="submit-btn">Submit Scorers</button>
+        <button type="submit" [disabled]="!isResultsValid()" class="submit-scorer-btn">Submit Scorers</button>
     </form>
     }
 </div>

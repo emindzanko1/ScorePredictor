@@ -136,7 +136,7 @@ export class MatchesComponent {
           this.prediction = prediction;
           this.updateFormFields();
         },
-        error: _ => sweetError('Error retrieving prediction')
+        error: _ => console.log('Error retrieving predictions')
       });
     }
   }
@@ -199,7 +199,7 @@ export class MatchesComponent {
   }
 
   submitPrediction(): void {
-    if (this.validatePredictions()) {
+    if (this.validatePredictions() || this.isAdmin) {
       const prediction: Prediction = {
         userId: this.currentUser()?.id!,
         fixtureId: this.currentFixture?.id!,
@@ -228,29 +228,9 @@ export class MatchesComponent {
     console.log(`Player ${checkbox.value} checked: ${checkbox.checked}`);
   }
 
-  submitActualResults(): void {
-    console.log(this.prediction.scorers);
-    // Assuming you have a method to save actual results
-    // this.matchesService.submitActualResults(this.actualResults).subscribe({
-    //   next: _ => {
-    //     sweetSuccess("Actual results have been submitted.");
-    //   },
-    //   error: _ => {
-    //     sweetError("There was an error submitting the actual results.");
-    //   }
-    // });
-  }
-
   // submitActualResults(): void {
-  //   // Assuming `actualResults` includes match results along with player counts
-  //   const resultsWithScores = this.getMatchesByFixture(this.fixture?.id).map(match => ({
-  //     ...this.actualResults[match.id],
-  //     homeScore: this.matchResults[match.id]?.homeScore || 0,
-  //     awayScore: this.matchResults[match.id]?.awayScore || 0
-  //   }));
-
-  //   // Submit results with scores
-  //   this.matchesService.submitActualResults(resultsWithScores).subscribe({
+  //   console.log(this.prediction.scorers);
+  //   this.predictionsService.submitPrediction().subscribe({
   //     next: _ => {
   //       sweetSuccess("Actual results have been submitted.");
   //     },
@@ -267,7 +247,6 @@ export class MatchesComponent {
   getPlayersByClub(teamId: number) {
     return this.players.filter(player => player.teamId === teamId);
   }
-
 
   incrementPlayerCount(playerId: number) {
     this.prediction.scorers.push(playerId);

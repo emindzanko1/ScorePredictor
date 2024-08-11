@@ -69,6 +69,6 @@ export class UserComponent {
   }
 
   isAdmin() {
-    return true;
+    return this.user?.username === 'admin';
   }
 }

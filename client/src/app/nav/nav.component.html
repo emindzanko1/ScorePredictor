@@ -5,7 +5,7 @@
             <a routerLink="/matches" class="navbar-logo">SCORE PREDICTOR</a>
         </div>
         <ul class="navbar-menu">
-            <li><a routerLink="/user/1" routerLinkActive="active">Profile</a></li>
+            <li><a routerLink="/user/{{accountService.currentUser()?.id}}" routerLinkActive="active">Profile</a></li>
             <li><a routerLink="/matches">Matches</a></li>
             <li><a routerLink="/" (click)="logout()">Logout</a></li>
         </ul>
