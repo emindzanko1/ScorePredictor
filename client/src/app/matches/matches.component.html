@@ -1,5 +1,6 @@
 <div class="container">
     <app-fixture-dropdown [fixtures]="fixtures" (selectedFixture)="onFixtureSelected($event)"></app-fixture-dropdown>
+    @if (!isAdmin) {
     <form (ngSubmit)="submitPrediction()" #predictionForm="ngForm">
         <app-watch [fixture]="fixture" [matches]="getMatchesByFixture(fixture?.id)"></app-watch>
         <div class="container">
@@ -32,14 +33,14 @@
                     </td>
                     <td>
                         <input [(ngModel)]="prediction.results[$index]"
-                            name="result-{{ match.homeTeamId }}-{{ match.awayTeamId }}" placeholder="Result" required />
+                            name="result-{{ match.homeTeamId }}-{{ match.awayTeamId }}" placeholder="- : -" required />
                     </td>
                     <td>
                         <select class="player-select" [(ngModel)]="scorerName"
                             name="scorer-{{ match.homeTeamId }}-{{ match.awayTeamId }}"
                             (change)="selectScorer($event, match)" required>
                             @for (player of getPlayersByClubs(match.homeTeamId, match.awayTeamId); track $index) {
-                            <option [value]="player.id + '|' + player.name" >
+                            <option [value]="player.id + '|' + player.name">
                                 {{ player.name }}
                             </option>
                             }
@@ -52,4 +53,61 @@
             <button type="submit" class="submit-btn" [disabled]="!validatePredictions()">Submit Predictions</button>
         </div>
     </form>
+    }
+    @else {
+    <form (ngSubmit)="submitActualResults()" class="results-form">
+        <h3>Submit Actual Scorers</h3>
+        @for (match of getMatchesByFixture(fixture?.id); track $index) {
+        <div class="match-container">
+            <div class="result-container">
+                <span class="result-score">{{ matchResults[match.id]?.homeScore || 0 }}</span>
+                :
+                <span class="result-score">{{ matchResults[match.id]?.awayScore || 0 }}</span>
+            </div>
+            <div class="teams-container">
+                <div class="team-column">
+                    <h4>{{ match.homeTeamName }}</h4>
+                    <div class="players-list">
+                        @for (player of getPlayersByClub(match.homeTeamId); track $index) {
+                        <div class="player-item">
+                            <input type="checkbox" [id]="player.id" [value]="player.id"
+                                (change)="updatePlayerCount($event, player.id)">
+                            <label [for]="player.id">
+                                {{ player.name }}
+                                @if (playerCounts[player.id] > 0) {
+                                <button type="button" (click)="incrementPlayerCount(player.id)"> x{{
+                                    playerCounts[player.id] }}</button>
+                                }
+                            </label>
+                        </div>
+                        }
+                    </div>
+                </div>
+                <div class="vs-separator">
+                    <span>VS</span>
+                </div>
+                <div class="team-column">
+                    <h4>{{ match.awayTeamName }}</h4>
+                    <div class="players-list">
+                        @for (player of getPlayersByClub(match.awayTeamId); track $index) {
+                        <div class="player-item">
+                            <input type="checkbox" [id]="player.id" [value]="player.id"
+                                (change)="updatePlayerCount($event, player.id)">
+                            <label [for]="player.id">
+                                {{ player.name }}
+                                @if (playerCounts[player.id] > 0) {
+                                <button type="button" (click)="incrementPlayerCount(player.id)"> x{{
+                                    playerCounts[player.id] }}</button>
+                                }
+                            </label>
+                        </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        }
+        <button type="submit" [disabled]="!isResultsValid()" class="submit-btn">Submit Scorers</button>
+    </form>
+    }
 </div>

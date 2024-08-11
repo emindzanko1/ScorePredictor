@@ -17,5 +17,10 @@
             </tbody>
         </table>
     </div>
-    <button (click)="play()">Play</button>
+    <div class="button-container">
+        <button (click)="play()">Play</button>
+        @if (isAdmin()) {
+        <button (click)="goToAdminPage()">Admin Panel</button>
+        }
+    </div>
 </div>

@@ -112,3 +112,10 @@ button:hover {
   color: #ffffff;
   cursor: pointer;
 }
+
+.button-container {
+  display: flex; 
+  justify-content: center; 
+  gap: 10px; 
+  margin-top: 0.5rem; 
+}

@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, input, Input, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Player } from '../_models/player';
 import { Prediction } from '../_models/prediction';
@@ -14,6 +14,7 @@ import { WatchComponent } from "../watch/watch.component";
 import { FixtureDropdownComponent } from "../dropdown/dropdown.component";
 import { formatDate, formatTime, sweetError, sweetSuccess, validatePrediction } from '../util/util';
 import { PredictionsService } from '../_services/predictions.service';
+import { switchMap, tap } from 'rxjs';
 
 @Component({
   selector: 'app-matches',
@@ -46,14 +47,18 @@ export class MatchesComponent {
     points: 0,
     fixtureId: 0,
     playerId: 0,
+    scorers: [],
   };
+  @Input() isAdmin: boolean = false;
+  playerCounts: { [playerId: number]: number } = {};
+  matchResults: { [matchId: number]: { homeScore: number, awayScore: number } } = {};
 
   ngOnInit() {
     this.loadCurrentUser();
     this.loadTeams();
     this.loadFixtures();
-    this.loadPlayers();
     this.loadCurrentFixture();
+    this.loadPlayers();
   }
 
   loadCurrentUser() {
@@ -92,14 +97,18 @@ export class MatchesComponent {
   }
 
   loadCurrentFixture() {
-    this.fixturesService.getUpcomingFixture().subscribe({
-      next: fixture => {
+    this.fixturesService.getUpcomingFixture().pipe(
+      tap(fixture => {
         this.fixture = fixture;
         this.currentFixture = fixture;
-        this.matches = this.getMatchesByFixture(this.fixture.id);
+      }),
+      switchMap(() => this.matchesService.getMatches())
+    ).subscribe({
+      next: matches => {
+        this.matches = this.getMatchesByFixture(this.fixture?.id);
         this.loadPrediction();
       },
-      error: _ => sweetError('Error retrieving fixture')
+      error: _ => sweetError('Error retrieving matches')
     });
   }
 
@@ -170,6 +179,7 @@ export class MatchesComponent {
     const playerId = parseInt(id, 10);
     this.prediction.playerId = playerId;
   }
+
   validatePredictions(): boolean {
     return validatePrediction(this.prediction!, this.currentFixture?.id!, this.fixture?.id!)
   }
@@ -196,8 +206,10 @@ export class MatchesComponent {
         outcomes: this.prediction!.outcomes,
         results: this.prediction!.results,
         playerId: this.prediction.playerId,
+        scorers: this.prediction!.scorers,
         points: 0,
       };
+      console.log(prediction);
       this.predictionsService.submitPrediction(prediction).subscribe({
         next: _ => {
           sweetSuccess("Your predictions have been submitted.");
@@ -210,4 +222,110 @@ export class MatchesComponent {
       sweetError("Please complete all required fields before submitting.", "Invalid Predictions!");
     }
   }
+
+  onPlayerChange(event: Event) {
+    const checkbox = event.target as HTMLInputElement;
+    console.log(`Player ${checkbox.value} checked: ${checkbox.checked}`);
+  }
+
+  submitActualResults(): void {
+    console.log(this.prediction.scorers);
+    // Assuming you have a method to save actual results
+    // this.matchesService.submitActualResults(this.actualResults).subscribe({
+    //   next: _ => {
+    //     sweetSuccess("Actual results have been submitted.");
+    //   },
+    //   error: _ => {
+    //     sweetError("There was an error submitting the actual results.");
+    //   }
+    // });
+  }
+
+  // submitActualResults(): void {
+  //   // Assuming `actualResults` includes match results along with player counts
+  //   const resultsWithScores = this.getMatchesByFixture(this.fixture?.id).map(match => ({
+  //     ...this.actualResults[match.id],
+  //     homeScore: this.matchResults[match.id]?.homeScore || 0,
+  //     awayScore: this.matchResults[match.id]?.awayScore || 0
+  //   }));
+
+  //   // Submit results with scores
+  //   this.matchesService.submitActualResults(resultsWithScores).subscribe({
+  //     next: _ => {
+  //       sweetSuccess("Actual results have been submitted.");
+  //     },
+  //     error: _ => {
+  //       sweetError("There was an error submitting the actual results.");
+  //     }
+  //   });
+  // }
+
+  isResultsValid() {
+    return true;
+  }
+
+  getPlayersByClub(teamId: number) {
+    return this.players.filter(player => player.teamId === teamId);
+  }
+
+
+  incrementPlayerCount(playerId: number) {
+    this.prediction.scorers.push(playerId);
+    this.playerCounts[playerId] = this.playerCounts[playerId] ? this.playerCounts[playerId] + 1 : 1;
+    this.updateScores();
+  }
+
+  updateScores() {
+    const scorerCounts = this.prediction.scorers.reduce((acc, playerId) => {
+      acc[playerId] = (acc[playerId] || 0) + 1;
+      return acc;
+    }, {} as Record<number, number>);
+
+    this.getMatchesByFixture(this.fixture?.id).forEach(match => {
+
+      let homeGoals = 0, awayGoals = 0;
+
+      const homePlayers = this.getPlayersByClub(match.homeTeamId);
+      const awayPlayers = this.getPlayersByClub(match.awayTeamId);
+
+      homePlayers.forEach(player => {
+        if (scorerCounts[player.id]) {
+          homeGoals += scorerCounts[player.id];
+        }
+      });
+
+      awayPlayers.forEach(player => {
+        if (scorerCounts[player.id]) {
+          awayGoals += scorerCounts[player.id];
+        }
+      });
+      this.matchResults[match.id] = { homeScore: homeGoals, awayScore: awayGoals };
+    });
+  }
+
+  updatePlayerCount(event: Event, playerId: number) {
+    const checkbox = event.target as HTMLInputElement;
+    if (checkbox.checked) {
+      if (!this.prediction.scorers) {
+        this.prediction.scorers = [];
+      }
+      this.prediction.scorers.push(playerId);
+      this.playerCounts[playerId] = 1
+    } else {
+      if (this.prediction.scorers) {
+        this.prediction.scorers = this.prediction.scorers.filter(id => id !== playerId);
+      }
+      delete this.playerCounts[playerId]
+    }
+    this.updateScores();
+  }
+
+  trackByMatchId(index: number, match: Match): number {
+    return match.id;
+  }
+
+  trackByPlayerId(index: number, player: Player): number {
+    return player.id;
+  }
+
 }

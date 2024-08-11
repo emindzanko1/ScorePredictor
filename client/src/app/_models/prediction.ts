@@ -5,4 +5,5 @@ export interface Prediction {
     points: number,
     fixtureId: number,
     playerId: number,
+    scorers: number[]
 }

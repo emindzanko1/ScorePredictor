@@ -13,6 +13,7 @@ import { sweetError } from '../util/util';
   styleUrl: './user.component.css'
 })
 export class UserComponent {
+
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private userService = inject(UserService);
@@ -55,11 +56,19 @@ export class UserComponent {
     this.router.navigate(['/user', userId]);
   }
 
+  goToAdminPage() {
+    this.router.navigate(['/admin']);
+  }
+
   isCurrentUser(userId: number): boolean {
     return userId === this.id;
   }
 
   play() {
     this.router.navigate(['/matches']);
+  }
+
+  isAdmin() {
+    return true;
   }
 }

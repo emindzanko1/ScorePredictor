@@ -20,11 +20,11 @@ export class NavComponent {
   }
 
   ngOnInit() {
-    this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd)
-    ).subscribe((event: NavigationEnd) => {
-      this.showNavbar = /^\/user\/(10|[1-9])$/.test(event.url) || event.url === '/matches';
-    });
+    // this.router.events.pipe(
+    //   filter(event => event instanceof NavigationEnd)
+    // ).subscribe((event: NavigationEnd) => {
+    //   this.showNavbar = /^\/user\/(10|[1-9])$/.test(event.url) || event.url === '/matches';
+    // });
   }
 
   logout () {
