@@ -329,3 +329,9 @@ td>select.player-select {
     outline: none;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
+
+.disabled {
+    pointer-events: none;
+    cursor: not-allowed;
+    opacity: 0.6; 
+}

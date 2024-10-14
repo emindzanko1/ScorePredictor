@@ -48,6 +48,7 @@ export class MatchesComponent {
     fixtureId: 0,
     playerId: 0,
     scorers: [],
+    isSubmitted: false
   };
   @Input() isAdmin: boolean = false;
   playerCounts: { [playerId: number]: number } = {};
@@ -134,9 +135,14 @@ export class MatchesComponent {
       this.predictionsService.getPrediction(this.currentUser()!.id, this.currentFixture.id).subscribe({
         next: prediction => {
           this.prediction = prediction;
+          console.log(this.prediction);
+          this.prediction.isSubmitted = true;
           this.updateFormFields();
         },
-        error: _ => console.log('Error retrieving predictions')
+        error: _ => {
+          console.log(this.prediction);
+          console.log('Error retrieving predictions');
+        }
       });
     }
   }
@@ -145,7 +151,6 @@ export class MatchesComponent {
     this.matches.forEach((match, index) => {
       const outcome = this.prediction.outcomes[index];
       const result = this.prediction.results[index];
-      const scorerId = this.prediction.playerId;
 
       if (outcome) {
         this.prediction.outcomes[index] = outcome;
@@ -155,10 +160,12 @@ export class MatchesComponent {
         this.prediction.results[index] = result;
       }
 
-      if (scorerId) {
-        const scorer = this.players.find(player => player.id === scorerId);
+      if (this.prediction.playerId) {
+        const scorer = this.players.find(player => player.id === this.prediction.playerId);
         if (scorer) {
+          this.prediction.playerId = scorer.id;
           this.scorerName = scorer.name;
+          console.log(scorer);
         }
       }
     });
@@ -173,11 +180,19 @@ export class MatchesComponent {
     return this.players.filter(player => player.teamId === home || player.teamId === away);
   }
 
+  getPlayerNameById(playerId: number): string {
+    const player = this.players.find(player => player.id === playerId);
+    return player ? player.name : 'Unknown Player';
+  }
+
   selectScorer(event: any, match: Match): void {
-    const value = event.target.value;
-    const [id, name] = value.split('|');
-    const playerId = parseInt(id, 10);
+    const playerId = parseInt(event.target.value, 10);
     this.prediction.playerId = playerId;
+    
+    const scorer = this.players.find(player => player.id === playerId);
+    if (scorer) {
+      this.scorerName = scorer.name;
+    }
   }
 
   validatePredictions(): boolean {
@@ -200,6 +215,7 @@ export class MatchesComponent {
 
   submitPrediction(): void {
     if (this.validatePredictions() || this.isAdmin) {
+      this.prediction.isSubmitted = true;
       const prediction: Prediction = {
         userId: this.currentUser()?.id!,
         fixtureId: this.currentFixture?.id!,
@@ -208,6 +224,7 @@ export class MatchesComponent {
         playerId: this.prediction.playerId,
         scorers: this.prediction!.scorers,
         points: 0,
+        isSubmitted: this.prediction.isSubmitted
       };
       console.log(prediction);
       this.predictionsService.submitPrediction(prediction).subscribe({

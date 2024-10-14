@@ -5,7 +5,7 @@
         <app-watch [fixture]="fixture" [matches]="getMatchesByFixture(fixture?.id)"></app-watch>
         <div class="container">
             <h3>{{ fixture?.name }}</h3>
-            <table class="schedule">
+            <table class="schedule" [class.disabled]="prediction.isSubmitted">
                 <tr>
                     <th>Date</th>
                     <th>Time</th>
@@ -36,13 +36,13 @@
                             name="result-{{ match.homeTeamId }}-{{ match.awayTeamId }}" placeholder="- : -" required />
                     </td>
                     <td>
-                        <select class="player-select" [(ngModel)]="scorerName"
+                        <select class="player-select" [(ngModel)]="prediction.playerId"
                             name="scorer-{{ match.homeTeamId }}-{{ match.awayTeamId }}"
                             (change)="selectScorer($event, match)" required>
                             @for (player of getPlayersByClubs(match.homeTeamId, match.awayTeamId); track $index) {
-                            <option [value]="player.id + '|' + player.name">
-                                {{ player.name }}
-                            </option>
+                                <option [value]="player.id">
+                                    {{ player.name }}
+                                </option>
                             }
                         </select>
                     </td>

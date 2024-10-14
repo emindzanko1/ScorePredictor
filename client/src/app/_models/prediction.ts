@@ -5,5 +5,6 @@ export interface Prediction {
     points: number,
     fixtureId: number,
     playerId: number,
-    scorers: number[]
+    scorers: number[],
+    isSubmitted: boolean
 }
