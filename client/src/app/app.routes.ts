@@ -12,5 +12,6 @@ export const routes: Routes = [
     { path: 'register', component: RegisterComponent},
     { path: 'user/:id', component: UserComponent},
     { path: 'matches', component: MatchesComponent},
+    { path: 'matches/:userId', component: MatchesComponent }, 
     { path: 'admin', component: AdminComponent}
 ];

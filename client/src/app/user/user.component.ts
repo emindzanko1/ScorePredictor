@@ -53,7 +53,7 @@ export class UserComponent {
   }
 
   goToUserProfile(userId: number): void {
-    this.router.navigate(['/user', userId]);
+    this.router.navigate(['/matches/', userId]);
   }
 
   goToAdminPage() {
@@ -65,7 +65,7 @@ export class UserComponent {
   }
 
   play() {
-    this.router.navigate(['/matches']);
+    this.router.navigate(['/matches/' + this.id]);
   }
 
   isAdmin() {

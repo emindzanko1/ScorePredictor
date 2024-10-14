@@ -1,4 +1,4 @@
-import { Component, inject, input, Input, signal } from '@angular/core';
+import { Component, inject, Input, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Player } from '../_models/player';
 import { Prediction } from '../_models/prediction';
@@ -15,6 +15,7 @@ import { FixtureDropdownComponent } from "../dropdown/dropdown.component";
 import { formatDate, formatTime, sweetError, sweetSuccess, validatePrediction } from '../util/util';
 import { PredictionsService } from '../_services/predictions.service';
 import { switchMap, tap } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-matches',
@@ -29,6 +30,7 @@ export class MatchesComponent {
   private fixturesService = inject(FixturesService);
   private playersService = inject(PlayersService);
   private predictionsService = inject(PredictionsService);
+  private route = inject(ActivatedRoute);
   currentUser = signal<User | null>(null);
   allMatches: Match[] = [];
   matchesByFixture: Match[] = [];
@@ -40,6 +42,7 @@ export class MatchesComponent {
   currentFixture?: Fixture;
   selectedScorer: any = null;
   scorerName: string = '';
+  id = Number(this.route.snapshot.paramMap.get('userId'));
   prediction: Prediction = {
     userId: 0,
     outcomes: Array(6).fill(''),
@@ -48,11 +51,12 @@ export class MatchesComponent {
     fixtureId: 0,
     playerId: 0,
     scorers: [],
-    isSubmitted: false
+    isSubmitted: true
   };
   @Input() isAdmin: boolean = false;
   playerCounts: { [playerId: number]: number } = {};
   matchResults: { [matchId: number]: { homeScore: number, awayScore: number } } = {};
+
 
   ngOnInit() {
     this.loadCurrentUser();
@@ -65,7 +69,9 @@ export class MatchesComponent {
   loadCurrentUser() {
     const user = localStorage.getItem('user');
     if (user) {
-      this.currentUser.set(JSON.parse(user));
+      const parsedUser = JSON.parse(user);
+      this.currentUser.set(parsedUser);
+      this.prediction.isSubmitted = parsedUser.id !== this.id;
     }
   }
 
@@ -129,10 +135,11 @@ export class MatchesComponent {
   }
 
   loadPrediction() {
-    this.prediction.userId = this.currentUser()?.id!;
+    this.prediction.userId = this.id;
+    console.log(this.prediction.userId);
     this.prediction.fixtureId = this.currentFixture?.id!;
     if (this.currentUser()?.id && this.currentFixture?.id) {
-      this.predictionsService.getPrediction(this.currentUser()!.id, this.currentFixture.id).subscribe({
+      this.predictionsService.getPrediction(this.prediction.userId, this.currentFixture.id).subscribe({
         next: prediction => {
           this.prediction = prediction;
           console.log(this.prediction);
@@ -188,7 +195,7 @@ export class MatchesComponent {
   selectScorer(event: any, match: Match): void {
     const playerId = parseInt(event.target.value, 10);
     this.prediction.playerId = playerId;
-    
+
     const scorer = this.players.find(player => player.id === playerId);
     if (scorer) {
       this.scorerName = scorer.name;

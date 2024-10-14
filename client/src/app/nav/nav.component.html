@@ -2,11 +2,11 @@
 <nav class="navbar">
     <div class="navbar-container">
         <div class="navbar-brand">
-            <a routerLink="/matches" class="navbar-logo">SCORE PREDICTOR</a>
+            <a routerLink="/matches/{{accountService.currentUser()?.id}}" class="navbar-logo">SCORE PREDICTOR</a>
         </div>
         <ul class="navbar-menu">
             <li><a routerLink="/user/{{accountService.currentUser()?.id}}" routerLinkActive="active">Profile</a></li>
-            <li><a routerLink="/matches">Matches</a></li>
+            <li><a routerLink="/matches/{{accountService.currentUser()?.id}}">Matches</a></li>
             <li><a routerLink="/" (click)="logout()">Logout</a></li>
         </ul>
     </div>
