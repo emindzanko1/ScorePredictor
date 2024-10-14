@@ -6,7 +6,7 @@
         </div>
         <ul class="navbar-menu">
             <li><a routerLink="/user/{{accountService.currentUser()?.id}}" routerLinkActive="active">Profile</a></li>
-            <li><a routerLink="/matches">Matches</a></li>
+            <li><a routerLink="/matches" routerLinkActive="active">Matches</a></li>
             <li><a routerLink="/" (click)="logout()">Logout</a></li>
         </ul>
     </div>

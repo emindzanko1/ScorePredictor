@@ -56,4 +56,9 @@
 .navbar-menu a:hover {
     background: rgba(255, 255, 255, 0.2);
     color: #007bff;
+} 
+
+.navbar-menu a.active {
+    background: rgba(255, 255, 255, 0.2);
+    color: #007bff;
 }

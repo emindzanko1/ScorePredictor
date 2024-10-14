@@ -43,4 +43,59 @@ public class PredictionsController(DataContext context) : BaseApiController
 
         return Ok(prediction);
     }
+
+    // private static int CalculatePoints(Prediction prediction, Dictionary<int, (int homeScore, int awayScore)> matchResults, Dictionary<int, List<int>> matchScorers)
+    // {
+    //     int points = 0;
+
+    //     // admin salje predikciju - actual result
+    //     // sad na osnovu toga 
+
+    //     for (int i = 0; i < prediction?.Outcomes?.Count; i++)
+    //     {
+    //         var matchId = prediction.FixtureId; 
+    //         var actualResult = matchResults.ContainsKey(matchId) ? matchResults[matchId] : (0, 0);
+    //         var predictedOutcome = prediction.Outcomes[i];
+    //         var actualOutcome = GetMatchOutcome(actualResult.homeScore, actualResult.awayScore);
+
+    //         if (predictedOutcome == actualOutcome)
+    //         {
+    //             points += 1;
+    //         }
+    //     }
+
+    //     // Calculate points for results
+    //     for (int i = 0; i < prediction.Results.Count; i++)
+    //     {
+    //         var matchId = prediction.FixtureId; // Adjust as needed
+    //         var actualResult = matchResults.ContainsKey(matchId) ? matchResults[matchId] : (0, 0);
+    //         var predictedResult = prediction.Results[i];
+    //         var actualResultString = $"{actualResult.homeScore} : {actualResult.awayScore}";
+
+    //         if (predictedResult == actualResultString)
+    //         {
+    //             points += 3;
+    //         }
+    //     }
+
+    //     foreach (var scorerId in prediction.Scorers)
+    //     {
+    //         foreach (var matchScorersList in matchScorers.Values)
+    //         {
+    //             if (matchScorersList.Contains(scorerId))
+    //             {
+    //                 points += 2;
+    //             }
+    //         }
+    //     }
+
+    //     return points;
+    // }
+    private static string GetMatchOutcome(int homeScore, int awayScore)
+    {
+        if (homeScore > awayScore) return "1";
+        if (homeScore < awayScore) return "2";
+        return "X";
+    }
+
 }

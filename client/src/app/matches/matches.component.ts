@@ -52,6 +52,8 @@ export class MatchesComponent {
   @Input() isAdmin: boolean = false;
   playerCounts: { [playerId: number]: number } = {};
   matchResults: { [matchId: number]: { homeScore: number, awayScore: number } } = {};
+  isFormLocked: boolean = false;
+  dateEditing: boolean = false;
 
   ngOnInit() {
     this.loadCurrentUser();
@@ -104,7 +106,7 @@ export class MatchesComponent {
       }),
       switchMap(() => this.matchesService.getMatches())
     ).subscribe({
-      next: matches => {
+      next: _ => {
         this.matches = this.getMatchesByFixture(this.fixture?.id);
         this.loadPrediction();
       },
@@ -181,22 +183,47 @@ export class MatchesComponent {
   }
 
   validatePredictions(): boolean {
-    return validatePrediction(this.prediction!, this.currentFixture?.id!, this.fixture?.id!)
+    return validatePrediction(this.prediction!, this.currentFixture?.id!, this.fixture?.id!);
   }
 
   getMatchesByFixture(fixtureId: number | undefined): Match[] {
     return this.allMatches.filter(match => match.fixtureId === fixtureId);
   }
 
+  // onFixtureSelected(fixtureId: number): void {
+  //   this.fixturesService.getFixture(fixtureId).subscribe({
+  //     next: fixture => {
+  //       this.fixture = fixture;
+  //       this.matches = this.getMatchesByFixture(fixtureId)
+  //     },
+  //     error: _ => sweetError('Error retrieving fixture')
+  //   });
+  // }
+
   onFixtureSelected(fixtureId: number): void {
     this.fixturesService.getFixture(fixtureId).subscribe({
       next: fixture => {
         this.fixture = fixture;
-        this.matches = this.getMatchesByFixture(fixtureId)
+        this.currentFixture = fixture;
+        this.matches = this.getMatchesByFixture(fixtureId);
+
+        this.prediction = {
+          userId: this.currentUser()?.id!,
+          outcomes: Array(6).fill(''),
+          results: Array(6).fill(''),
+          points: 0,
+          fixtureId: this.currentFixture?.id!,
+          playerId: 0,
+          scorers: [],
+        };
+        this.scorerName = '';
+        this.loadPrediction();
+        this.isFormLocked = false;
       },
       error: _ => sweetError('Error retrieving fixture')
     });
   }
+
 
   submitPrediction(): void {
     if (this.validatePredictions() || this.isAdmin) {
@@ -209,10 +236,10 @@ export class MatchesComponent {
         scorers: this.prediction!.scorers,
         points: 0,
       };
-      console.log(prediction);
       this.predictionsService.submitPrediction(prediction).subscribe({
         next: _ => {
           sweetSuccess("Your predictions have been submitted.");
+          this.isFormLocked = true;
         },
         error: _ => {
           sweetError("There was an error submitting your predictions.");
@@ -223,10 +250,43 @@ export class MatchesComponent {
     }
   }
 
+  submitFixtureData() {
+    const scorerIds: number[] = Object.keys(this.playerCounts).flatMap(playerId => {
+      const count = this.playerCounts[parseInt(playerId)];
+      return Array(count).fill(parseInt(playerId));
+    });   
+    console.log(this.matches);
+    this.matches.forEach(match => {
+      const matchResult = this.matchResults[match.id];
+      if (matchResult) {
+        match.result = `${matchResult.homeScore} : ${matchResult.awayScore}`;
+      } else {
+        match.result = '- : -';
+      }
+      // match.scorers = scorerIds.filter(scorerId =>
+      //   this.getPlayersByClubs(match.homeTeamId, match.awayTeamId).some(player => player.id === scorerId)
+      // );
+      match.scorers = [];
+      console.log(match);
+      this.matchesService.submitMatchData(match).subscribe({
+        next: _ => {
+          sweetSuccess("Match data has been updated.");
+          this.isFormLocked = true;
+        },
+        error: error => {
+          console.log(match);
+          sweetError("There was an error updating match data.");
+          console.log(error);
+        }
+      });
+    });
+  }
+
   onPlayerChange(event: Event) {
     const checkbox = event.target as HTMLInputElement;
     console.log(`Player ${checkbox.value} checked: ${checkbox.checked}`);
   }
+
 
   // submitActualResults(): void {
   //   console.log(this.prediction.scorers);
@@ -307,4 +367,25 @@ export class MatchesComponent {
     return player.id;
   }
 
+  getPlayerName(playerId: number, match: Match): string {
+    const player = this.players.find(player => player.id === playerId);
+    const isPlayerInTeam = player?.teamId === match.homeTeamId || player?.teamId === match.awayTeamId
+    return isPlayerInTeam ? player.name : '';
+  }
+
+  editDate(match: Match) {
+    this.dateEditing = true;
+  }
+
+  saveDate(match: Match) {
+    this.dateEditing = false;
+    sweetSuccess('Match date updated');
+    // Save the updated date to the server or handle as needed
+    // this.matchesService.updateMatch(match).subscribe({
+    //   next: _ => sweetSuccess('Match date updated'),
+    //   error: _ => sweetError('Error updating match date')
+    // });
+  }
+
+  // this.isFormLocked === this.prediction ? true : false;
 }

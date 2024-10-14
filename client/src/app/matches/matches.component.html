@@ -17,14 +17,26 @@
                     <th>Scorer</th>
                 </tr>
                 @for (match of getMatchesByFixture(fixture?.id); track $index) {
-                <tr>
-                    <td>{{ match.date }}</td>
-                    <td>{{ match.time }}</td>
+                <tr [class.locked]="isFormLocked">
+
+                    <!-- <td>{{ match.date }}</td> -->
+                    <td><input type="date" /></td>
+                    <!-- <td>{{ match.date }}</td> -->
+                    <!-- <input type="date" [value]="match.date | date:'yyyy-MM-dd'" (change)="saveDate(match, $event.target.value)" /> -->
+                    <!-- @if (!dateEditing) {
+                        <span>{{ match.date }}</span>
+                        }
+                        @if (dateEditing) {
+                        <input type="date" [(ngModel)]="match.date" (blur)="saveDate(match)" />
+                        }
+                        <button type="button" (click)="editDate(match)">Edit</button> -->
+                    <!-- <td>{{ match.time }}</td> -->
+                    <td><input type="time" /></td>
                     <td>{{ match.homeTeamName }}</td>
                     <td>-</td>
                     <td>{{ match.awayTeamName }}</td>
                     <td>
-                        <select [(ngModel)]="prediction.outcomes[$index]"
+                        <select [(ngModel)]="prediction.outcomes[$index]" [disabled]="isFormLocked"
                             name="outcome-{{ match.homeTeamId }}-{{ match.awayTeamId }}" required>
                             <option value="1">1</option>
                             <option value="X">X</option>
@@ -32,30 +44,38 @@
                         </select>
                     </td>
                     <td>
-                        <input [(ngModel)]="prediction.results[$index]"
+                        <input [(ngModel)]="prediction.results[$index]" [disabled]="isFormLocked"
                             name="result-{{ match.homeTeamId }}-{{ match.awayTeamId }}" placeholder="- : -" required />
                     </td>
                     <td>
+                        @if (prediction.playerId) {
+                        <ng-container>
+                            {{ getPlayerName(prediction.playerId, match) }}
+                        </ng-container>
+                        }
+                        @else {
                         <select class="player-select" [(ngModel)]="scorerName"
                             name="scorer-{{ match.homeTeamId }}-{{ match.awayTeamId }}"
-                            (change)="selectScorer($event, match)" required>
+                            (change)="selectScorer($event, match)" required [disabled]="isFormLocked">
                             @for (player of getPlayersByClubs(match.homeTeamId, match.awayTeamId); track $index) {
                             <option [value]="player.id + '|' + player.name">
                                 {{ player.name }}
                             </option>
                             }
                         </select>
+                        }
                     </td>
                 </tr>
                 }
             </table>
             <br>
-            <button type="submit" class="submit-btn" [disabled]="!validatePredictions()">Submit Predictions</button>
+            <button type="submit" class="submit-btn" [disabled]="!validatePredictions() || isFormLocked">Submit
+                Predictions</button>
         </div>
     </form>
     }
     @else {
-    <form (ngSubmit)="submitPrediction()" class="results-form">
+    <form (ngSubmit)="submitFixtureData()" class="results-form">
         <h3>Submit Actual Scorers</h3>
         @for (match of getMatchesByFixture(fixture?.id); track $index) {
         <div class="match-container">

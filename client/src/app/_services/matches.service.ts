@@ -20,4 +20,8 @@ export class MatchesService {
       })
     );
   }
+
+  submitMatchData(match: Match): Observable<any> {
+    return this.http.put(this.baseUrl + 'matches', match);
+  }
 }

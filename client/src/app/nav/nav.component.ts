@@ -1,12 +1,11 @@
 import { Component, inject } from '@angular/core';
-import { NavigationEnd, Router, RouterLink } from '@angular/router';
-import { filter } from 'rxjs';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { AccountService } from '../_services/account.service';
 
 @Component({
   selector: 'app-nav',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, RouterLinkActive],
   templateUrl: './nav.component.html',
   styleUrl: './nav.component.css'
 })

@@ -9,4 +9,5 @@ export interface Match {
     awayTeamId: number;
     homeTeamName: string;
     awayTeamName: string;
+    scorers: number[];
 }
