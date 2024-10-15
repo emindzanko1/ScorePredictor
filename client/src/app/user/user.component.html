@@ -1,26 +1,31 @@
-<div class="profile-wrapper">
-    <div class="profile-header">
-        <img [src]="user?.picture" alt="Profile Picture" class="profile-picture" />
-        <h1>Welcome {{ user?.fullName }}</h1>
+@if (user) {
+    <div class="profile-wrapper">
+        <div class="profile-header">
+            <img [src]="user?.picture" alt="Profile Picture" class="profile-picture" />
+            <h1>Welcome {{ user?.fullName }}</h1>
+        </div>
+        <div class="profile-content">
+            <h2>Leaderboard</h2>
+            <table class="leaderboard-table">
+                <tbody>
+                    @for (rankedUser of rankedUsers; track $index) {
+                    <tr [ngClass]="{'highlight': isCurrentUser(rankedUser.id)}" (click)="goToUserProfile(rankedUser.id)">
+                        <td>{{ $index + 1 }}</td>
+                        <td>{{ rankedUser.fullName }}</td>
+                        <td>{{ rankedUser.points }}</td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="button-container">
+            <button (click)="play()">Play</button>
+            @if (isAdmin()) {
+            <button (click)="goToAdminPage()">Admin Panel</button>
+            }
+        </div>
     </div>
-    <div class="profile-content">
-        <h2>Leaderboard</h2>
-        <table class="leaderboard-table">
-            <tbody>
-                @for (rankedUser of rankedUsers; track $index) {
-                <tr [ngClass]="{'highlight': isCurrentUser(rankedUser.id)}" (click)="goToUserProfile(rankedUser.id)">
-                    <td>{{ $index + 1 }}</td>
-                    <td>{{ rankedUser.fullName }}</td>
-                    <td>{{ rankedUser.points }}</td>
-                </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-    <div class="button-container">
-        <button (click)="play()">Play</button>
-        @if (isAdmin()) {
-        <button (click)="goToAdminPage()">Admin Panel</button>
-        }
-    </div>
-</div>
+}
+@else {
+    <p>You need to be logged in to access this page.</p>
+}

@@ -30,6 +30,12 @@ export class UserComponent {
   loadUser() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     if (!id) return;
+    const user = localStorage.getItem('user');
+    if (user) {
+      const parsedUser = JSON.parse(user);
+      if (id !== parsedUser.id) return;
+    }
+
     this.userService.getUser(id).subscribe({
       next: user => {
         this.user = user;
@@ -70,5 +76,9 @@ export class UserComponent {
 
   isAdmin() {
     return this.user?.username === 'admin';
+  }
+
+  navigateTo(url: string): void {
+    this.router.navigateByUrl(url);
   }
 }
