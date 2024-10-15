@@ -223,6 +223,15 @@ export class MatchesComponent {
   submitPrediction(): void {
     if (this.validatePredictions() || this.isAdmin) {
       this.prediction.isSubmitted = true;
+      if(this.isAdmin) {
+        this.prediction.results = this.matches.map(match => {
+          const result = this.matchResults[match.id];
+          if (result) {
+            return `${result.homeScore}:${result.awayScore}`; 
+          }
+          return "0:0"; 
+        });
+      }
       const prediction: Prediction = {
         userId: this.currentUser()?.id!,
         fixtureId: this.currentFixture?.id!,
@@ -284,7 +293,7 @@ export class MatchesComponent {
       return acc;
     }, {} as Record<number, number>);
 
-    this.getMatchesByFixture(this.fixture?.id).forEach(match => {
+    this.getMatchesByFixture(this.fixture?.id).forEach((match, index) => {
 
       let homeGoals = 0, awayGoals = 0;
 
@@ -303,6 +312,13 @@ export class MatchesComponent {
         }
       });
       this.matchResults[match.id] = { homeScore: homeGoals, awayScore: awayGoals };
+      if (homeGoals > awayGoals) {
+        this.prediction.outcomes[index] = '1';  
+      } else if (awayGoals > homeGoals) {
+        this.prediction.outcomes[index] = '2';  
+      } else {
+        this.prediction.outcomes[index] = 'X'; 
+      }
     });
   }
 
