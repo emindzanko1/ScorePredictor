@@ -16,11 +16,12 @@ import { formatDate, formatTime, sweetError, sweetSuccess, validatePrediction } 
 import { PredictionsService } from '../_services/predictions.service';
 import { switchMap, tap } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
+import { MatchTableHeaderComponent } from "../match-table-header/match-table-header.component";
 
 @Component({
   selector: 'app-matches',
   standalone: true,
-  imports: [FormsModule, WatchComponent, FixtureDropdownComponent],
+  imports: [FormsModule, WatchComponent, FixtureDropdownComponent, MatchTableHeaderComponent],
   templateUrl: './matches.component.html',
   styleUrls: ['./matches.component.css']
 })

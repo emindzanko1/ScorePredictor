@@ -1,9 +1,9 @@
 <div class="container">
-    <app-fixture-dropdown [fixtures]="fixtures" (selectedFixture)="onFixtureSelected($event)"></app-fixture-dropdown>
+    <!-- <app-fixture-dropdown [fixtures]="fixtures" (selectedFixture)="onFixtureSelected($event)"></app-fixture-dropdown> -->
     @if (!isAdmin) {
     <form (ngSubmit)="submitPrediction()" #predictionForm="ngForm">
         <app-watch [fixture]="fixture" [matches]="getMatchesByFixture(fixture?.id)"></app-watch>
-        <div class="container">
+        <div>
             <h3>{{ fixture?.name }}</h3>
             <table class="schedule" [class.disabled]="prediction.isSubmitted">
                 <tr>
@@ -16,6 +16,9 @@
                     <th>Result</th>
                     <th>Scorer</th>
                 </tr>
+                <!-- <tr>
+                    <app-match-table-header></app-match-table-header>
+                </tr> -->
                 @for (match of getMatchesByFixture(fixture?.id); track $index) {
                 <tr>
                     <td>{{ match.date }}</td>

@@ -1,5 +1,9 @@
 .container {
     margin-bottom: 5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 10px;
 }
 
 h3 {
@@ -11,7 +15,8 @@ h3 {
 
 .schedule {
     width: 100%;
-    max-width: 1200px;
+    max-width: 100%;
+    /* max-width: 1200px; */
     border-collapse: collapse;
     margin: 0 auto;
 }
@@ -27,9 +32,8 @@ h3 {
 
 .schedule th {
     background-color: #004e92;
-    color: #ffffff;
+    background: linear-gradient(45deg, #004e92, #000428);
     font-weight: bold;
-    font-size: 1.4em;
 }
 
 .schedule tr:nth-child(even) {
@@ -39,14 +43,6 @@ h3 {
 .schedule tr:hover {
     background-color: #345a80;
     cursor: pointer;
-}
-
-.schedule td {
-    background-color: #2a3a50;
-}
-
-.schedule th {
-    background: linear-gradient(45deg, #004e92, #000428);
 }
 
 .schedule td {
@@ -129,14 +125,6 @@ td>select.player-select {
 .submit-btn:focus {
     outline: none;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-}
-
-
-.container {
-    margin-bottom: 5rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
 }
 
 .schedule td input:focus,
@@ -261,14 +249,13 @@ td>select.player-select {
 
 .player-item label {
     flex: 1;
-    margin-right: 15px; 
-    font-size: 1.3em; 
+    margin-right: 15px;
+    font-size: 1.3em;
     color: #004e92;
-
-    padding: 5px 10px; 
+    padding: 5px 10px;
     border-radius: 5px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); 
-    display: inline-block; 
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    display: inline-block;
 }
 
 .player-item button {
@@ -333,5 +320,65 @@ td>select.player-select {
 .disabled {
     pointer-events: none;
     cursor: not-allowed;
-    opacity: 0.6; 
+    opacity: 0.6;
+}
+
+@media (max-width: 768px) {
+    .container {
+        margin-top: 12rem;
+    }
+
+    .schedule th,
+    .schedule td {
+        font-size: 0.9em;
+        padding: 8px;
+    }
+
+    h3 {
+        font-size: 1.5em;
+    }
+
+    .container {
+        overflow-x: auto;
+    }
+
+    td>input,
+    td>select {
+        width: 60px;
+        font-size: 1em;
+    }
+
+    td>select.player-select {
+        max-width: 100px;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        margin-top: 12rem;
+    }
+
+    .schedule th,
+    .schedule td {
+        font-size: 0.2em;
+        padding: 5px;
+    }
+
+    h3 {
+        font-size: 1.5em;
+    }
+
+    .container {
+        overflow-x: auto;
+    }
+
+    td>input,
+    td>select {
+        width: 30px;
+        font-size: 0.5em;
+    }
+
+    td>select.player-select {
+        max-width: 60px;
+    }
 }

@@ -11,7 +11,7 @@
     min-width: 200px;
     text-align: center;
     position: relative;
-    gap: 10px; 
+    gap: 10px;
 }
 
 .clock:before {
@@ -64,5 +64,37 @@
     font-size: 0.75em;
     font-weight: bold;
     color: #ffffff;
-    margin: 0 10px; 
+    margin: 0 10px;
+}
+
+@media (max-width: 768px) {
+    .clock {
+        font-size: 60px;
+        padding: 20px 50px;
+    }
+    
+    .time-unit {
+        font-size: 1.2em; 
+    }
+
+    .separator {
+        font-size: 0.6em;
+        margin: 0 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .clock {
+        font-size: 40px;
+        padding: 15px 30px;
+    }
+
+    .time-unit {
+        font-size: 1em;
+    }
+
+    .separator {
+        font-size: 0.5em;
+        margin: 0 6px;
+    }
 }
