@@ -136,20 +136,15 @@ export class MatchesComponent {
 
   loadPrediction() {
     this.prediction.userId = this.id;
-    console.log(this.prediction.userId);
     this.prediction.fixtureId = this.currentFixture?.id!;
     if (this.currentUser()?.id && this.currentFixture?.id) {
       this.predictionsService.getPrediction(this.prediction.userId, this.currentFixture.id).subscribe({
         next: prediction => {
           this.prediction = prediction;
-          console.log(this.prediction);
           this.prediction.isSubmitted = true;
           this.updateFormFields();
         },
-        error: _ => {
-          console.log(this.prediction);
-          console.log('Error retrieving predictions');
-        }
+        error: _ => console.log('Error retrieving predictions')
       });
     }
   }
@@ -172,7 +167,6 @@ export class MatchesComponent {
         if (scorer) {
           this.prediction.playerId = scorer.id;
           this.scorerName = scorer.name;
-          console.log(scorer);
         }
       }
     });
@@ -185,11 +179,6 @@ export class MatchesComponent {
 
   getPlayersByClubs(home: number, away: number): Player[] {
     return this.players.filter(player => player.teamId === home || player.teamId === away);
-  }
-
-  getPlayerNameById(playerId: number): string {
-    const player = this.players.find(player => player.id === playerId);
-    return player ? player.name : 'Unknown Player';
   }
 
   selectScorer(event: any, match: Match): void {
@@ -223,13 +212,13 @@ export class MatchesComponent {
   submitPrediction(): void {
     if (this.validatePredictions() || this.isAdmin) {
       this.prediction.isSubmitted = true;
-      if(this.isAdmin) {
+      if (this.isAdmin) {
         this.prediction.results = this.matches.map(match => {
           const result = this.matchResults[match.id];
           if (result) {
-            return `${result.homeScore}:${result.awayScore}`; 
+            return `${result.homeScore}:${result.awayScore}`;
           }
-          return "0:0"; 
+          return "0:0";
         });
       }
       const prediction: Prediction = {
@@ -242,7 +231,6 @@ export class MatchesComponent {
         points: 0,
         isSubmitted: this.prediction.isSubmitted
       };
-      console.log(prediction);
       this.predictionsService.submitPrediction(prediction).subscribe({
         next: _ => {
           sweetSuccess("Your predictions have been submitted.");
@@ -255,23 +243,6 @@ export class MatchesComponent {
       sweetError("Please complete all required fields before submitting.", "Invalid Predictions!");
     }
   }
-
-  onPlayerChange(event: Event) {
-    const checkbox = event.target as HTMLInputElement;
-    console.log(`Player ${checkbox.value} checked: ${checkbox.checked}`);
-  }
-
-  // submitActualResults(): void {
-  //   console.log(this.prediction.scorers);
-  //   this.predictionsService.submitPrediction().subscribe({
-  //     next: _ => {
-  //       sweetSuccess("Actual results have been submitted.");
-  //     },
-  //     error: _ => {
-  //       sweetError("There was an error submitting the actual results.");
-  //     }
-  //   });
-  // }
 
   isResultsValid() {
     return true;
@@ -313,11 +284,11 @@ export class MatchesComponent {
       });
       this.matchResults[match.id] = { homeScore: homeGoals, awayScore: awayGoals };
       if (homeGoals > awayGoals) {
-        this.prediction.outcomes[index] = '1';  
+        this.prediction.outcomes[index] = '1';
       } else if (awayGoals > homeGoals) {
-        this.prediction.outcomes[index] = '2';  
+        this.prediction.outcomes[index] = '2';
       } else {
-        this.prediction.outcomes[index] = 'X'; 
+        this.prediction.outcomes[index] = 'X';
       }
     });
   }
@@ -338,13 +309,4 @@ export class MatchesComponent {
     }
     this.updateScores();
   }
-
-  trackByMatchId(index: number, match: Match): number {
-    return match.id;
-  }
-
-  trackByPlayerId(index: number, player: Player): number {
-    return player.id;
-  }
-
 }

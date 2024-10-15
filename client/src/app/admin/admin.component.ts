@@ -10,8 +10,4 @@ import { MatchesComponent } from "../matches/matches.component";
   styleUrl: './admin.component.css'
 })
 export class AdminComponent {
-
-  submitResults() {
-    console.log('admin works');;
-  }
 }

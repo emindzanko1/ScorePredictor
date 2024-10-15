@@ -36,8 +36,7 @@ export class AppComponent {
       next: response => {
         this.users = response
       },
-      error: _ => sweetError('Error'),
-      complete: () => console.log('Users fetched!')
+      error: _ => sweetError('Error')
     })
   }
 }
