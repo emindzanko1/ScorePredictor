@@ -10,10 +10,12 @@ namespace API.Controllers
     public class PredictionsController : BaseApiController
     {
         private readonly DataContext _context;
+        private readonly IConfiguration _configuration;
 
-        public PredictionsController(DataContext context)
+        public PredictionsController(DataContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
 
         [HttpGet]
@@ -29,7 +31,8 @@ namespace API.Controllers
             if (prediction == null)
                 return BadRequest("Prediction data is null.");
 
-            var isAdmin = await _context.Users.AnyAsync(u => u.Id == 8);
+            var adminId = _configuration.GetValue<int>("AdminUserId");
+            var isAdmin = prediction.UserId == adminId;
 
             if (!isAdmin)
             {
@@ -85,7 +88,7 @@ namespace API.Controllers
                 .FirstOrDefaultAsync(p => p.UserId == userId && p.FixtureId == fixtureId);
 
             if (prediction == null)
-                return NotFound();
+                return NoContent();
 
             return Ok(prediction);
         }
@@ -136,6 +139,7 @@ namespace API.Controllers
 
             if (homeTeamGoals > awayTeamGoals)
                 return "1";
+                
             else if (awayTeamGoals > homeTeamGoals)
                 return "2";
 

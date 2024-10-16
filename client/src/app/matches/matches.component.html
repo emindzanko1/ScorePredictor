@@ -1,5 +1,5 @@
 <div class="container">
-    <!-- <app-fixture-dropdown [fixtures]="fixtures" (selectedFixture)="onFixtureSelected($event)"></app-fixture-dropdown> -->
+    <app-fixture-dropdown [fixtures]="fixtures" (selectedFixture)="onFixtureSelected($event)"></app-fixture-dropdown>
     @if (!isAdmin) {
     <form (ngSubmit)="submitPrediction()" #predictionForm="ngForm">
         <app-watch [fixture]="fixture" [matches]="getMatchesByFixture(fixture?.id)"></app-watch>

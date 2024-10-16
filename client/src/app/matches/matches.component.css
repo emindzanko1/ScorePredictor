@@ -138,6 +138,105 @@ td>select.player-select {
     color: #aaa;
 }
 
+.disabled {
+    pointer-events: none;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+@media (max-width: 768px) {
+    .container {
+        margin-top: 12rem;
+    }
+
+    .schedule th,
+    .schedule td {
+        font-size: 0.9em;
+        padding: 8px;
+    }
+
+    h3 {
+        font-size: 1.5em;
+    }
+
+    .container {
+        overflow-x: auto;
+    }
+
+    td>input,
+    td>select {
+        width: 60px;
+        font-size: 1em;
+    }
+
+    td>select.player-select {
+        max-width: 100px;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        margin-top: 12rem;
+    }
+
+    .schedule th,
+    .schedule td {
+        font-size: 0.2em;
+        padding: 5px;
+    }
+
+    h3 {
+        font-size: 1.5em;
+    }
+
+    .container {
+        overflow-x: auto;
+    }
+
+    td>input,
+    td>select {
+        width: 30px;
+        font-size: 0.5em;
+    }
+
+    td>select.player-select {
+        max-width: 60px;
+    }
+}
+
+@media (max-width: 768px) {
+
+    .match-container,
+    .teams-container {
+        flex-direction: column;
+    }
+
+    .team-column h4 {
+        font-size: 1.3em;
+        padding: 10px;
+    }
+
+    .result-container {
+        font-size: 2em;
+    }
+
+    .result-score {
+        font-size: 2.5em;
+        margin: 0 10px;
+    }
+
+    .submit-scorer-btn {
+        font-size: 1em;
+        padding: 8px 16px;
+    }
+
+    .player-item label {
+        font-size: 1.1em;
+    }
+}
+
+/*else*/
+
 .results-form {
     margin: 20px;
     padding: 20px;
@@ -317,68 +416,26 @@ td>select.player-select {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
-.disabled {
-    pointer-events: none;
-    cursor: not-allowed;
-    opacity: 0.6;
-}
-
-@media (max-width: 768px) {
-    .container {
-        margin-top: 12rem;
-    }
-
-    .schedule th,
-    .schedule td {
-        font-size: 0.9em;
-        padding: 8px;
-    }
-
-    h3 {
-        font-size: 1.5em;
-    }
-
-    .container {
-        overflow-x: auto;
-    }
-
-    td>input,
-    td>select {
-        width: 60px;
-        font-size: 1em;
-    }
-
-    td>select.player-select {
-        max-width: 100px;
-    }
-}
-
 @media (max-width: 480px) {
-    .container {
-        margin-top: 12rem;
-    }
-
-    .schedule th,
-    .schedule td {
-        font-size: 0.2em;
-        padding: 5px;
-    }
-
-    h3 {
+    .result-container {
         font-size: 1.5em;
     }
 
-    .container {
-        overflow-x: auto;
+    .result-score {
+        font-size: 2em;
+        margin: 0 5px;
     }
 
-    td>input,
-    td>select {
-        width: 30px;
-        font-size: 0.5em;
+    .submit-scorer-btn {
+        font-size: 0.9em;
+        padding: 6px 12px;
     }
 
-    td>select.player-select {
-        max-width: 60px;
+    .team-column h4 {
+        font-size: 1.1em;
+    }
+
+    .player-item label {
+        font-size: 1em;
     }
 }

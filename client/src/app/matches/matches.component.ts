@@ -52,12 +52,11 @@ export class MatchesComponent {
     fixtureId: 0,
     playerId: 0,
     scorers: [],
-    isSubmitted: true
+    isSubmitted: false
   };
   @Input() isAdmin: boolean = false;
   playerCounts: { [playerId: number]: number } = {};
   matchResults: { [matchId: number]: { homeScore: number, awayScore: number } } = {};
-
 
   ngOnInit() {
     this.loadCurrentUser();
@@ -112,7 +111,7 @@ export class MatchesComponent {
       }),
       switchMap(() => this.matchesService.getMatches())
     ).subscribe({
-      next: matches => {
+      next: _ => {
         this.matches = this.getMatchesByFixture(this.fixture?.id);
         this.loadPrediction();
       },
@@ -141,11 +140,24 @@ export class MatchesComponent {
     if (this.currentUser()?.id && this.currentFixture?.id) {
       this.predictionsService.getPrediction(this.prediction.userId, this.currentFixture.id).subscribe({
         next: prediction => {
-          this.prediction = prediction;
-          this.prediction.isSubmitted = true;
-          this.updateFormFields();
-        },
-        error: _ => console.log('Error retrieving predictions')
+          if (prediction === null) {
+            const now = new Date();
+            this.prediction = {
+              userId: 0,
+              outcomes: Array(6).fill(''),
+              results: Array(6).fill(''),
+              points: 0,
+              fixtureId: 0,
+              playerId: 0,
+              scorers: [],
+              isSubmitted: this.matches.some(match => new Date(match.matchDateTime) <= now) || false
+            };
+          } 
+          else {
+            this.prediction = prediction;
+            this.updateFormFields();
+          }
+        }
       });
     }
   }
@@ -204,7 +216,9 @@ export class MatchesComponent {
     this.fixturesService.getFixture(fixtureId).subscribe({
       next: fixture => {
         this.fixture = fixture;
-        this.matches = this.getMatchesByFixture(fixtureId)
+        this.matches = this.getMatchesByFixture(fixtureId);
+        this.currentFixture = fixture;
+        this.loadPrediction();
       },
       error: _ => sweetError('Error retrieving fixture')
     });

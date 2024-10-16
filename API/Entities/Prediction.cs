@@ -13,5 +13,6 @@ public class Prediction
     public int? PlayerId { get; set; }
     public Player? Player { get; set; }
     public List<int>? Scorers { get; set; }
+    public bool IsSubmitted { get; set; } = false;
 }
 
