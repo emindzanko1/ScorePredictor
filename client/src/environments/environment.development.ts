@@ -1,4 +1,4 @@
 export const environment = {
     production: false,
-    apiUrl: 'https://localhost:5001/api/'
+    apiUrl: 'https://score-predictor-fga5fkfkhqfrhgbd.southeastasia-01.azurewebsites.net/'
 };
